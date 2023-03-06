@@ -3,6 +3,8 @@
 namespace App\DataFixtures;
 
 use App\Entity\City;
+use App\Entity\Place;
+use App\Repository\CityRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -38,5 +40,20 @@ class AppFixtures extends Fixture
         }
         $this->entityManager->flush();
     }
+
+    public function addPlaces(int $number, CityRepository $cityRepository){
+        for ($i=0; $i<$number; $i++){
+            $place = new Place();
+            $place
+                ->setName($this->faker->word)
+                ->setStreet($this->faker->streetName);
+            $nb = $this->faker->numberBetween(1, 50);
+            $place
+                ->setCity($cityRepository->find($nb));
+            $this->entityManager->persist($place);
+        }
+        $this->entityManager->flush();
+    }
+
 
 }
