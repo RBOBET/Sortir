@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\City;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -27,5 +28,15 @@ class AppFixtures extends Fixture
         //TODO appeler méthodes créées
     }
 
+    public function addCities(int $number){
+        for ($i=0 ; $i<$number ; $i++){
+            $city = new City();
+            $city
+                ->setName($this->faker->city)
+                ->setPostalCode($this->faker->postcode);
+            $this->entityManager->persist($city);
+        }
+        $this->entityManager->flush();
+    }
 
 }
