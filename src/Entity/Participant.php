@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -42,6 +44,23 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
+
+    #[ORM\ManyToMany(targetEntity: Outing::class, inversedBy: 'participants')]
+    private Collection $outings;
+
+    #[ORM\ManyToOne(inversedBy: 'participants')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Campus $campus = null;
+
+    #[ORM\OneToMany(mappedBy: 'planner', targetEntity: Outing::class)]
+    private Collection $organizedOutings;
+
+    public function __construct()
+    {
+        $this->outings = new ArrayCollection();
+        $this->organizedOutings = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -196,4 +215,72 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAtValue() : void {
         $this->setIsEnabled(true);
     }
+
+    /**
+     * @return Collection<int, Outing>
+     */
+    public function getOutings(): Collection
+    {
+        return $this->outings;
+    }
+
+    public function addOuting(Outing $outing): self
+    {
+        if (!$this->outings->contains($outing)) {
+            $this->outings->add($outing);
+        }
+
+        return $this;
+    }
+
+    public function removeOuting(Outing $outing): self
+    {
+        $this->outings->removeElement($outing);
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Outing>
+     */
+    public function getOrganizedOutings(): Collection
+    {
+        return $this->organizedOutings;
+    }
+
+    public function addOrganizedOuting(Outing $organizedOuting): self
+    {
+        if (!$this->organizedOutings->contains($organizedOuting)) {
+            $this->organizedOutings->add($organizedOuting);
+            $organizedOuting->setPlanner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganizedOuting(Outing $organizedOuting): self
+    {
+        if ($this->organizedOutings->removeElement($organizedOuting)) {
+            // set the owning side to null (unless already changed)
+            if ($organizedOuting->getPlanner() === $this) {
+                $organizedOuting->setPlanner(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }
