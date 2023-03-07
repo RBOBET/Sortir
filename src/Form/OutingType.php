@@ -96,6 +96,7 @@ class OutingType extends AbstractType
                 'class' => City::class,
                 'choice_label' => 'name',
                 'label' => 'Ville',
+                'mapped' => false,
                 'query_builder' => function(CityRepository $cityRepository) {
                     $qb = $cityRepository->createQueryBuilder("c");
                     $qb->addOrderBy("c.name");
@@ -104,6 +105,7 @@ class OutingType extends AbstractType
             ])
 
             ->add('place', EntityType::class, [
+                'mapped' => false,
                 'class' => Place::class,
                 'choice_label' => 'name',
                 'label' => 'Lieu',
