@@ -55,6 +55,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'planner', targetEntity: Outing::class)]
     private Collection $organizedOutings;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pseudo = null;
+
     public function __construct()
     {
         $this->outings = new ArrayCollection();
@@ -278,6 +281,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
                 $organizedOuting->setPlanner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(?string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }
