@@ -7,6 +7,9 @@ use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\StatusRepository;
+use App\Entity\Participant;
+use App\Repository\CampusRepository;
+>>>>>>> 61d2a101f18be8337e17a7187b195210cc30a310
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -67,4 +70,48 @@ class AppFixtures extends Fixture
         $this->entityManager->flush();
     }
 
+private function addParticipant(int $number, CampusRepository $campusRepository)
+{
+    for ($i = 0; $i < $number; $i++){
+        $participant = new Participant();
+
+        $participant
+            ->setLastName($this->faker->lastName)
+            ->setFirstName($this->faker->firstName)
+            ->setEmail($this->faker->email)
+            ->setRoles('ROLE_USER')
+            ->setPassword($this->passwordHasher->hashPassword($participant,'123456'))
+            ->setPhone($this->faker->phoneNumber);
+
+        $number=$this->faker->numberBetween(1,7);
+        $participant
+            ->setCampus($campusRepository->find($number));
+        $this->entityManager->persist($participant);
+    }
+    $this->entityManager->flush();
+}
+    public function addCities(int $number){
+        for ($i=0 ; $i<$number ; $i++){
+            $city = new City();
+            $city
+                ->setName($this->faker->city)
+                ->setPostalCode($this->faker->postcode);
+            $this->entityManager->persist($city);
+        }
+        $this->entityManager->flush();
+    }
+
+    public function addPlaces(int $number, CityRepository $cityRepository){
+        for ($i=0; $i<$number; $i++){
+            $place = new Place();
+            $place
+                ->setName($this->faker->word)
+                ->setStreet($this->faker->streetName);
+            $nb = $this->faker->numberBetween(1, 50);
+            $place
+                ->setCity($cityRepository->find($nb));
+            $this->entityManager->persist($place);
+        }
+        $this->entityManager->flush();
+    }
 }
