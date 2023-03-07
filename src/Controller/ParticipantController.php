@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Form\ParticipantType;
+use App\Repository\ParticipantRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,10 +12,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class ParticipantController extends AbstractController
 {
     #[Route('/update', name: 'update')]
-    public function update(): Response
+    public function update(ParticipantRepository $participantRepository): Response
     {
+        $participant = $this->getUser();
+        $participantFrom = $this->createForm(ParticipantType::class,$participant);
+
         return $this->render('participant/update.html.twig', [
-            'participant'
+            'participantForm'=>$participantFrom->createView()
         ]);
     }
 }
