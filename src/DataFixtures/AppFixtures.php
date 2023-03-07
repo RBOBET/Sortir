@@ -2,17 +2,14 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Participant;
+use App\Repository\CityRepository;
 use App\Entity\Outing;
-use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\PlaceRepository;
 use App\Repository\StatusRepository;
-use App\Entity\Participant;
-use App\Repository\CampusRepository;
->>>>>>> 61d2a101f18be8337e17a7187b195210cc30a310
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
@@ -27,7 +24,6 @@ class AppFixtures extends Fixture
         private UserPasswordHasherInterface $passwordHasher
     )
     {
-
         $this->faker = Factory::create('fr_FR');
     }
 
@@ -35,6 +31,27 @@ class AppFixtures extends Fixture
     {
         $this->addOuting(50);
     }
+
+private function addParticipant (int $number)
+{
+    for ($i = 0; $i < $number; $i++){
+        $Participant = new Participant();
+
+        $Participant
+            ->setLastName($this->faker->lastName)
+            ->setFirstName($this->faker->firstName)
+            ->setEmail($this->faker->email)
+            ->setRoles('ROLE_USER')
+            ->setPassword($this->passwordHasher->hashPassword($participant,'123456'))
+            ->setPhone($this->faker->phoneNumber);
+
+        $number=$this->faker->numberBetween(1,7);
+        $participant
+            ->setCampus($campusRepository->find($number));
+        $this->entityManager->persist($participant);
+    }
+    $this->entityManager->flush();
+}
 
     public function addOuting(
         int $number,
@@ -69,27 +86,6 @@ class AppFixtures extends Fixture
 
         $this->entityManager->flush();
     }
-
-private function addParticipant(int $number, CampusRepository $campusRepository)
-{
-    for ($i = 0; $i < $number; $i++){
-        $participant = new Participant();
-
-        $participant
-            ->setLastName($this->faker->lastName)
-            ->setFirstName($this->faker->firstName)
-            ->setEmail($this->faker->email)
-            ->setRoles('ROLE_USER')
-            ->setPassword($this->passwordHasher->hashPassword($participant,'123456'))
-            ->setPhone($this->faker->phoneNumber);
-
-        $number=$this->faker->numberBetween(1,7);
-        $participant
-            ->setCampus($campusRepository->find($number));
-        $this->entityManager->persist($participant);
-    }
-    $this->entityManager->flush();
-}
     public function addCities(int $number){
         for ($i=0 ; $i<$number ; $i++){
             $city = new City();
