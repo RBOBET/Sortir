@@ -2,9 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\City;
-use App\Entity\Place;
-use App\Repository\CityRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -30,6 +27,19 @@ class AppFixtures extends Fixture
         //TODO appeler méthodes créées
     }
 
+private function addParticipant (int $number)
+{
+    for ($i = 0; $i < $number; $i++){
+        $Participant = new Participant();
+
+        $Participant
+            ->setLastName($this->faker->lastName)
+            ->setFirstName($this->faker->firstName)
+
+
+
+    }
+}
     public function addCities(int $number){
         for ($i=0 ; $i<$number ; $i++){
             $city = new City();
@@ -54,6 +64,4 @@ class AppFixtures extends Fixture
         }
         $this->entityManager->flush();
     }
-
-
 }
