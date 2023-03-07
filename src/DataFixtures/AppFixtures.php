@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Participant;
+use App\Repository\CampusRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -27,18 +29,25 @@ class AppFixtures extends Fixture
         //TODO appeler méthodes créées
     }
 
-private function addParticipant (int $number)
+private function addParticipant(int $number, CampusRepository $campusRepository)
 {
     for ($i = 0; $i < $number; $i++){
-        $Participant = new Participant();
+        $participant = new Participant();
 
-        $Participant
+        $participant
             ->setLastName($this->faker->lastName)
             ->setFirstName($this->faker->firstName)
+            ->setEmail($this->faker->email)
+            ->setRoles('ROLE_USER')
+            ->setPassword($this->passwordHasher->hashPassword($participant,'123456'))
+            ->setPhone($this->faker->phoneNumber);
 
-
-
+        $number=$this->faker->numberBetween(1,7);
+        $participant
+            ->setCampus($campusRepository->find($number));
+        $this->entityManager->persist($participant);
     }
+    $this->entityManager->flush();
 }
     public function addCities(int $number){
         for ($i=0 ; $i<$number ; $i++){
