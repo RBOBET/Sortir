@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Campus;
+use App\Entity\Outing;
 use App\Entity\Season;
+use App\Form\OutingType;
 use App\Form\SeasonType;
 use App\Repository\OutingRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\SerieRepository;
+use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,20 +18,27 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/outing', name: 'outing_')]
 class OutingController extends AbstractController
-
-//TODO discuss about naming convention (could have more than one add)
-//TODO create form on the other side
 {
 
-    #[Route('/add', name: 'add')]
+    #[Route('/add', name: 'add_')]
     public function add(Request $request, OutingRepository $outingRepository): Response
     {
         $outing = new Outing();
         $outingForm = $this->createForm(OutingType::class, $outing);
+        $plannerCampus = new Campus();
 
         $outingForm->handleRequest($request);
 
         if($outingForm->isSubmitted() && $outingForm->isValid()){
+
+            $outingForm->add('plannerCampus', Entity::class, [
+                'class' => Campus::class,
+                'choice_label' => 'name',
+                'label' => 'Campus',
+                'attr' => 'disabled',
+                'value' => $plannerCampus->getCampus()
+                ]
+            );
 
 
             $outingRepository->save($outing, true);
