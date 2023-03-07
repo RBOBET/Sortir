@@ -2,7 +2,10 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\City;
 use App\Entity\Participant;
+use App\Entity\Place;
+use App\Repository\CampusRepository;
 use App\Repository\CityRepository;
 use App\Entity\Outing;
 use App\Repository\ParticipantRepository;
@@ -21,7 +24,12 @@ class AppFixtures extends Fixture
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private UserPasswordHasherInterface $passwordHasher
+        private UserPasswordHasherInterface $passwordHasher,
+        private CityRepository $cityRepository,
+        private CampusRepository $campusRepository,
+        private ParticipantRepository $participantRepository,
+        private StatusRepository $statusRepository,
+        private PlaceRepository $placeRepository
     )
     {
         $this->faker = Factory::create('fr_FR');
@@ -29,25 +37,39 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $this->addOuting(50);
+        $this->addCities(50);
+        //$this->addPlaces(50, $this->cityRepository);
+        //$this->addParticipant(50, $this->campusRepository);
+        //$this->addOuting(50,$this->participantRepository, $this->statusRepository, $this->placeRepository );
     }
 
-private function addParticipant (int $number)
+private function addParticipant(int $number, CampusRepository $campusRepository)
 {
-    for ($i = 0; $i < $number; $i++){
-        $Participant = new Participant();
+    $admin = new Participant();
+    $admin
+        ->setEmail('admin@campus-eni.fr')
+        ->setCampus($campusRepository->find(1))
+        ->setPhone($this->faker->phoneNumber)
+        ->setFirstName('Toto')
+        ->setLastName('Ladmin')
+        ->setPassword($this->passwordHasher->hashPassword($admin,'123456'))
+        ->setRoles(['ROLE_ADMIN']);
+    $this->entityManager->persist($admin);
 
-        $Participant
+    for ($i = 0; $i < $number; $i++){
+        $participant = new Participant();
+
+        $participant
             ->setLastName($this->faker->lastName)
             ->setFirstName($this->faker->firstName)
             ->setEmail($this->faker->email)
-            ->setRoles('ROLE_USER')
+            ->setRoles(['ROLE_USER'])
             ->setPassword($this->passwordHasher->hashPassword($participant,'123456'))
             ->setPhone($this->faker->phoneNumber);
 
-        $number=$this->faker->numberBetween(1,7);
+        $idCampus=$this->faker->numberBetween(1,7);
         $participant
-            ->setCampus($campusRepository->find($number));
+            ->setCampus($campusRepository->find($idCampus));
         $this->entityManager->persist($participant);
     }
     $this->entityManager->flush();
@@ -64,21 +86,22 @@ private function addParticipant (int $number)
 
             $outing = new Outing();
             $idPlanner = $this->faker->numberBetween(min: 1,max: 50);
+            $planner = $participantRepository->find($idPlanner);
             $status = $this->faker->numberBetween(min: 1, max: 6);
-            $place = $this->faker->city;
+            $idPlace = $this->faker->numberBetween(min: 1, max: 50);
 
 
             $outing
-                ->setPlanner($participantRepository->find($idPlanner))
-                ->setPlannerCampus($participantRepository->find($idPlanner)->getCampus())
+                ->setPlanner($planner)
+                ->setPlannerCampus($planner->getCampus())
                 ->setStatus($statusRepository->find($status))
-                ->setPlace($placeRepository->find($place))
+                ->setPlace($placeRepository->find($idPlace))
                 ->setTitle($this->faker->title)
                 ->setDateTimeStart($this->faker->dateTimeBetween('now', '+1 year'))
                 ->setDuration($this->faker->numberBetween(min: 1, max: 2880))
                 ->setRegistrationLimitDate($this->faker->dateTimeBetween('-1 year', $outing->getDateTimeStart()))
                 ->setNbParticipantsMax($this->faker->numberBetween(min: 0, max: 50))
-                ->setOverview($this->faker->sentence($nbWords = 6, $variableNbWords = true))
+                ->setOverview(implode(" ", $this->faker->words(5)))
             ;
 
             $this->entityManager->persist($outing);
