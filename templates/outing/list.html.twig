@@ -1,24 +1,65 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <table>
+    <table class="table table-striped scroll">
         <thead>
         <tr>
-            <th>Nom de la sortie</th>
-            <th>Date de la sortie</th>
-            <th>Clôture</th>
-            <th>Inscrits/places</th>
-            <th>Etat</th>
-            <th>Inscrit</th>
-            <th>Organisateur</th>
-            <th>Actions</th>
+            <th scope="col">Nom de la sortie</th>
+            <th scope="col">Date de la sortie</th>
+            <th scope="col">Clôture</th>
+            <th scope="col">Inscrits/places</th>
+            <th scope="col">Etat</th>
+            <th scope="col">Inscrit</th>
+            <th scope="col">Organisateur</th>
+            <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>The table body</td>
-            <td>with two columns</td>
-        </tr>
+        {% for outing in outings %}
+            <tr scope="row">
+                <td>{{ outing.title }}</td>
+                <td>{{ outing.dateTimeStart | date('d/m/Y H:i') }}</td>
+                <td>{{ outing.registrationLimitDate | date('d/m/Y') }}</td>
+                <td>{{ outing.participants | length }}/{{ outing.nbParticipantsMax }}</td>
+                <td>{{ outing.status.label }}</td>
+                <td>
+                    {% if outing.participants.empty or not (app.user in outing.participants) %}
+                        NON
+                    {% else %}
+                        OUI
+                    {% endif %}
+
+                </td>
+                <td>{{ outing.planner.firstName | capitalize }} {{ outing.planner.lastName | first | upper }}.</td>
+                <td>
+                    {% if outing.status.id != 1 and outing.status.id != 5 %}
+                        <a href="">Afficher</a>
+                    {% endif %}
+
+                    {% if app.user == outing.planner %}
+                        {% if outing.status.id == 1 %}
+                            <a href="">Modifier</a> <a href="">Publier</a>
+                        {% endif %}
+                        {% if outing.status.id == 2 or outing.status.id == 3 %}
+                            <a href="">Annuler</a>
+                        {% endif %}
+                    {% endif %}
+
+
+                    {% if not outing.participants.empty and app.user in outing.participants %}
+                        {% if date(outing.dateTimeStart) < date() %}
+                            <a href="">Se désister</a>
+                        {% endif %}
+                    {% elseif not (app.user in outing.participants) %}
+                        {% if outing.status.id == 2 %}
+                            <a href="">S'inscrire</a>
+                        {% endif %}
+                    {% endif %}
+
+
+                </td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}

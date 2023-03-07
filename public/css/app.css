@@ -75,7 +75,21 @@ nav li {
 }
 
 
+.scroll tbody {
+    display:block;
+    max-height:25em;
+    overflow-y:auto;
+}
 
+.scroll thead {
+    display: block;
+}
+
+.scroll td, .scroll th
+{
+    width: 100vh;
+
+}
 
 /********************** Module  5  Doctrine   **************************/
 
