@@ -59,4 +59,13 @@ class OutingController extends AbstractController
 
         return $this->redirectToRoute('outing_list');
     }
+
+    #[Route('/list', name: 'list')]
+    public function list(OutingRepository $outingRepository){
+         $outings = $outingRepository->findAll();
+
+        return $this->render('outing/list.html.twig', [
+            'outings' => $outings
+        ]);
+    }
 }
