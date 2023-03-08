@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Controller;
 
@@ -70,7 +70,7 @@ class OutingController extends AbstractController
 
 
     #[Route('/remove/{id}', name: 'remove')]
-    public function remove(int $id, OutingRepository $outingRepository){
+    public function remove(int $id, OutingRepository $outingRepository) : Response{
         $outing = $outingRepository->find($id);
 
         if($outing){
@@ -84,16 +84,28 @@ class OutingController extends AbstractController
     }
 
     #[Route('/list', name: 'list')]
-    public function list(OutingRepository $outingRepository){
-         $outings = $outingRepository->findAll();
+    public function list(OutingRepository $outingRepository) : Response {
+         $outings = $outingRepository->findListWithoutFilter();
 
         return $this->render('outing/list.html.twig', [
             'outings' => $outings
         ]);
     }
 
-    #[Route('/show/{id}', name:'show')]
-    public function show(int $id){
+    #[Route('/show/{id}', name: 'show')]
+    public function show(int $id, OutingRepository $outingRepository): Response
+    {
+        $outing = $outingRepository->find($id);
+
+        if (!$outing) {
+            throw $this->createNotFoundException("Oops! il n'existe pas !");
+        }
+
+            return $this->render('outing/show.html.twig', [
+                'outing' => $outing
+            ]);
+        }
+
 
     }
 
@@ -119,6 +131,7 @@ class OutingController extends AbstractController
 //
 //        return new JsonResponse($responseArray);
 //    }
+
 
 
 }
