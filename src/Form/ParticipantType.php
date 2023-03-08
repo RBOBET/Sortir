@@ -25,7 +25,10 @@ class ParticipantType extends AbstractType
     {
         $builder
             ->add('pseudo',TextType::class,[
-                'label'=> 'Pseudo :'
+                'label'=> 'Pseudo :',
+                'required'=>false,
+
+
             ])
 
             ->add('firstName',TextType::class,[
@@ -45,6 +48,7 @@ class ParticipantType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
 
                 'type'=>PasswordType::class,
+                'required'=>false,
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'first_options' => [
@@ -70,8 +74,10 @@ class ParticipantType extends AbstractType
             ])
 
 
-
-            ->add('photo',FileType::class,['label'=>'Ma photo'])
+            ->add('photo',FileType::class,[
+                'label'=>'Ma photo',
+                'required'=>false,
+            ])
         ;
     }
 

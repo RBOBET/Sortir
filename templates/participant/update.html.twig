@@ -1,19 +1,22 @@
 {% extends 'base.html.twig' %}
-
-
 {% block title %} Mon profil {% endblock %}
 
 {% block body %}
 
     <div>
-{{ form_start(participantForm) }}
+        {{ form_start(participantForm) }}
 
-    {{ form_widget(participantForm) }}
-    <button> Enregistrer </button>
+        {{ form_widget(participantForm) }}
+    <div>
+        <button>Enregistrer</button>
 
 
         {{ form_end(participantForm) }}
-</div>
+
+       <a href="{{ path('outing_list') }}"><button type="button">Annuler</button></a>
+    </div>
+    </div>
+
 {% endblock %}
 
 
