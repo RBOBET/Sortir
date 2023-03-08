@@ -2,9 +2,11 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Campus;
 use App\Entity\City;
 use App\Entity\Participant;
 use App\Entity\Place;
+use App\Entity\Status;
 use App\Repository\CampusRepository;
 use App\Repository\CityRepository;
 use App\Entity\Outing;
@@ -29,7 +31,8 @@ class AppFixtures extends Fixture
         private CampusRepository $campusRepository,
         private ParticipantRepository $participantRepository,
         private StatusRepository $statusRepository,
-        private PlaceRepository $placeRepository
+        private PlaceRepository $placeRepository,
+
     )
     {
         $this->faker = Factory::create('fr_FR');
@@ -37,6 +40,8 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $this->addCampus($this->campusRepository);
+        $this->addStatus($this->statusRepository);
         $this->addCities(50);
         $this->addPlaces(50, $this->cityRepository);
         $this->addParticipant(50, $this->campusRepository);
@@ -131,6 +136,66 @@ private function addParticipant(int $number, CampusRepository $campusRepository)
                 ->setCity($cityRepository->find($nb));
             $this->entityManager->persist($place);
         }
+        $this->entityManager->flush();
+    }
+
+    public function addCampus(CampusRepository $campusRepository){
+        $campus1 = new Campus();
+        $campus1->setName('Saint-Herblain');
+        $this->entityManager->persist($campus1);
+
+        $campus2 = new Campus();
+        $campus2->setName('Chartres-De-Bretagne');
+        $this->entityManager->persist($campus2);
+
+        $campus3 = new Campus();
+        $campus3->setName('Quimper');
+        $this->entityManager->persist($campus3);
+
+        $campus4 = new Campus();
+        $campus4->setName('Niort');
+        $this->entityManager->persist($campus4);
+
+        $campus5 = new Campus();
+        $campus5->setName('Saint-Nazaire');
+        $this->entityManager->persist($campus5);
+
+        $campus6 = new Campus();
+        $campus6->setName('La-Roche-Sur-Yon');
+        $this->entityManager->persist($campus6);
+
+        $campus7 = new Campus();
+        $campus7->setName('Angers');
+        $this->entityManager->persist($campus7);
+
+        $this->entityManager->flush();
+    }
+
+    public function addStatus(StatusRepository $statusRepository){
+        $status1 = new Status();
+        $status1->setLabel('created');
+        $this->entityManager->persist($status1);
+
+        $status2 = new Status();
+        $status2->setLabel('opened');
+        $this->entityManager->persist($status2);
+
+        $status3 = new Status();
+        $status3->setLabel('closed');
+        $this->entityManager->persist($status3);
+
+        $status4 = new Status();
+        $status4->setLabel('ongoing');
+        $this->entityManager->persist($status4);
+
+        $status5 = new Status();
+        $status5->setLabel('finished');
+        $this->entityManager->persist($status5);
+
+        $status6 = new Status();
+        $status6->setLabel('canceled');
+        $this->entityManager->persist($status6);
+
         $this->entityManager->flush();
     }
 }
