@@ -80,9 +80,19 @@ class OutingController extends AbstractController
         ]);
     }
 
-    #[Route('/show/{id}', name:'show')]
-    public function show(int $id){
+    #[Route('/show/{id}', name: 'show')]
+    public function show(int $id, OutingRepository $outingRepository): Response
+    {
+        $outing = $outingRepository->find($id);
 
-    }
+        if (!$outing) {
+            throw $this->createNotFoundException("Oops! il n'existe pas !");
+        }
+
+            return $this->render('outing/show.html.twig', [
+                'outing' => $outing
+            ]);
+        }
+
 }
 
