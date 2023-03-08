@@ -79,4 +79,10 @@ class OutingController extends AbstractController
             'outings' => $outings
         ]);
     }
+
+    #[Route('/show/{id}', name:'show')]
+    public function show(int $id){
+
+    }
 }
+
