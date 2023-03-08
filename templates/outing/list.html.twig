@@ -33,7 +33,7 @@
                 <td>{{ outing.planner.firstName | capitalize }} {{ outing.planner.lastName | first | upper }}.</td>
                 <td>
                     {% if outing.status.id != 1 and outing.status.id != 5 %}
-                        <a href="">Afficher</a>
+                        <a href="{{ path('outing_show', {'id': outing.id}) }}">Afficher</a>
                     {% endif %}
 
                     {% if app.user == outing.planner %}
@@ -62,6 +62,7 @@
         {% endfor %}
         </tbody>
     </table>
+    <a href=""><button>Créer une sortie</button></a>
 {% endblock %}
 
 {% block title %}
