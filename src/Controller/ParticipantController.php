@@ -21,12 +21,10 @@ class ParticipantController extends AbstractController
 
         $participantForm->handleRequest($request);
 
-        dump("cucou");
+
 
             if ($participantForm->isSubmitted()&& $participantForm->isValid()){
-                dump("cucou1");
              if (!$participantForm->get('plainPassword')->isEmpty()){
-                 dump("cucou2");
                 $password =  $passwordHasher->hashPassword($participant, $participantForm->get('plainPassword')->getData());
                 $participant->setPassword($password);
              }

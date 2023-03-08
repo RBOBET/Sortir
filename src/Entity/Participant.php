@@ -6,8 +6,10 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use http\Message;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -18,7 +20,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(unique: true)]
+    #[Assert\NotBlank(message: "Entrer une adresse Mail, s'il vous plait!")]
+    #[Assert\Email(message: "L'adresse mail n'est pas conforme, Merci!")]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -27,16 +31,34 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
+
     #[ORM\Column]
     private ?string $password = null;
+    #[Assert\NotBlank(message: "Entrer un mot de passe, s'il vous plait!")]
+    #[Assert\Length(min: 2,
+        max: 255,
+        minMessage: "Minimum {{ limit }} caractères svp !",
+        maxMessage: "Maximum {{ limit }} caractères svp !"
+    )]
+
 
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Maximum {{ limit }} caractères s'il vous plait !"
+    )]
+
 
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Maximum {{ limit }} caractères s'il vous plait !"
+    )]
 
     #[ORM\Column(length: 20)]
+    #[Assert\Regex('^0[1-79]\.?\d{2}\.?\d{2}\.?\d{2}\.?\d{2}$', message: 'Le numéro de téléphone n\'est pas au bon format')]
     private ?string $phone = null;
 
     #[ORM\Column]
@@ -55,8 +77,16 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'planner', targetEntity: Outing::class)]
     private Collection $organizedOutings;
 
-    #[ORM\Column(length: 255, nullable: true)]
+
+    #[ORM\Column]
+    #[Assert\Length(
+        min:4,
+        max: 20,
+        minMessage: "Minimum {{ limit }} caractères svp !",
+        maxMessage: "Maximum {{ limit }} caractères svp !"
+    )]
     private ?string $pseudo = null;
+
 
     public function __construct()
     {
