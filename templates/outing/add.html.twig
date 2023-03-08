@@ -1,8 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block pageTitle %}{{ parent() }} | nouvelle-sortie{% endblock %}
+
+{% block title %} {{ parent() }} | nouvelle-sortie {% endblock %}
+
+{% block pageTitle %}
+    <h2>Créer une sortie</h2>
+{% endblock %}
 
 {% block body %}
-    <h2>Créer une sortie</h2>
+
+
+    {{ form_start(outingForm) }}
+
+
+    {{ form_widget(outingForm) }}
+    <div>
+    <button>Enregistrer</button>
+    <button>Publier la sortie</button>
+
+
+    {{ form_end(outingForm) }}
+    <a class="btn" href="{{ path('outing_list') }}">Annuler</a>
+    </div>
+
 {% endblock %}
 

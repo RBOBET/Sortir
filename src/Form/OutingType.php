@@ -45,11 +45,15 @@ class OutingType extends AbstractType
             ])
 
             ->add('dateTimeStart', DateTimeType::class, [
-                'label' => 'Date et heure de la sortie: '
+                'label' => 'Date et heure de la sortie: ',
+                'html5' => true,
+                'widget' => 'single_text'
             ])
 
             ->add('registrationLimitDate', DateType::class, [
-                'label' => 'Date limite d\'inscription : '
+                'label' => 'Date limite d\'inscription : ',
+                'html5' => true,
+                'widget' => 'single_text'
             ])
 
             ->add('nbParticipantsMax', IntegerType::class, [
@@ -95,7 +99,7 @@ class OutingType extends AbstractType
             ->add('city', EntityType::class, [
                 'class' => City::class,
                 'choice_label' => 'name',
-                'label' => 'Ville',
+                'label' => 'Ville : ',
                 'mapped' => false,
                 'query_builder' => function(CityRepository $cityRepository) {
                     $qb = $cityRepository->createQueryBuilder("c");
@@ -108,7 +112,7 @@ class OutingType extends AbstractType
                 'mapped' => false,
                 'class' => Place::class,
                 'choice_label' => 'name',
-                'label' => 'Lieu',
+                'label' => 'Lieu : ',
     //            'attr' => http_redirect(AddPlace)  //TODO check how it works and fix that shit
             ])
         ;

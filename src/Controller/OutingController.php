@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class OutingController extends AbstractController
 {
 
-    #[Route('/add', name: 'add_')]
+    #[Route('/add', name: 'add')]
     public function add(Request $request, OutingRepository $outingRepository): Response
     {
         $outing = new Outing();
