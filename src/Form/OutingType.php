@@ -23,7 +23,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-
+use Doctrine\ORM\Query\Expr\Join;
 
 class OutingType extends AbstractType
 {
@@ -108,19 +108,19 @@ class OutingType extends AbstractType
                 }
             ])
 
-//TODO fix the following shit
+//TODO fix da following shit
 
-//            ->add('place', EntityType::class, [
-//                'class' => Place::class,
-//                'choice_label' => 'name',
-//                'label' => 'Lieu',
-//                'query_builder' => function(PlaceRepository $placeRepository){
-//                    $qb = $placeRepository->createQueryBuilder("p");
-//                    $qb->leftJoin ('p.city', 'c', Join::ON, 'p.city.id = c.id');
-//                    $qb->addSelect("c");
-//                    return $qb;
-//                }
-//            ])
+            ->add('place', EntityType::class, [
+                'class' => Place::class,
+                'choice_label' => 'name',
+                'label' => 'Lieu',
+                'query_builder' => function(PlaceRepository $placeRepository){
+                    $qb = $placeRepository->createQueryBuilder("p");
+                    $qb->leftJoin ('p.city', 'c');
+                    $qb->addSelect("c");
+                    return $qb;
+                }
+            ])
 
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer pour plus tard'])

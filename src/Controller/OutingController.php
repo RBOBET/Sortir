@@ -22,7 +22,7 @@ class OutingController extends AbstractController
     public function add(
                         Request $request,
                         OutingRepository $outingRepository,
-                        StatusRepository $statusRepository
+                        StatusRepository $statusRepository,
     ): Response
 
     {
@@ -32,7 +32,6 @@ class OutingController extends AbstractController
         $outing->setPlannerCampus($planner->getCampus());
 
         $outingForm = $this->createForm(OutingType::class, $outing);
-
 
         $outingForm->handleRequest($request);
 
