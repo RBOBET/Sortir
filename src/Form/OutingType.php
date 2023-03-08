@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Controller\OutingController;
 use App\Entity\Campus;
 use App\Entity\City;
 use App\Entity\Outing;
@@ -9,14 +10,13 @@ use App\Entity\Place;
 use App\Repository\CampusRepository;
 use App\Repository\CityRepository;
 use App\Repository\ParticipantRepository;
-use App\Repository\SerieRepository;
-use Container0DDX2nx\getParticipantRepositoryService;
-
+use App\Repository\PlaceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -56,7 +56,7 @@ class OutingType extends AbstractType
                 'widget' => 'single_text'
             ])
 
-            ->add('nbParticipantsMax', IntegerType::class, [
+            ->add('nbParticipantsMax',IntegerType::class, [
                 'label' => 'Nombre de places',
                 'constraints' => [
                     new NotBlank([
@@ -108,13 +108,27 @@ class OutingType extends AbstractType
                 }
             ])
 
-            ->add('place', EntityType::class, [
-                'mapped' => false,
-                'class' => Place::class,
-                'choice_label' => 'name',
-                'label' => 'Lieu : ',
-    //            'attr' => http_redirect(AddPlace)  //TODO check how it works and fix that shit
-            ])
+//TODO fix the following shit
+
+//            ->add('place', EntityType::class, [
+//                'class' => Place::class,
+//                'choice_label' => 'name',
+//                'label' => 'Lieu',
+//                'query_builder' => function(PlaceRepository $placeRepository){
+//                    $qb = $placeRepository->createQueryBuilder("p");
+//                    $qb->leftJoin ('p.city', 'c', Join::ON, 'p.city.id = c.id');
+//                    $qb->addSelect("c");
+//                    return $qb;
+//                }
+//            ])
+
+            ->add('save', SubmitType::class, [
+                'label' => 'Enregistrer pour plus tard'])
+            ->add('saveAndPublish', SubmitType::class, [
+                'label' => 'Publier la sortie'])
+
+
+//
         ;
     }
 

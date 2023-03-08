@@ -4,12 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Campus;
 use App\Entity\Outing;
-use App\Entity\Season;
+use App\Entity\Participant;
 use App\Form\OutingType;
-use App\Form\SeasonType;
 use App\Repository\OutingRepository;
-use App\Repository\SeasonRepository;
-use App\Repository\SerieRepository;
+use App\Repository\StatusRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,32 +19,46 @@ class OutingController extends AbstractController
 {
 
     #[Route('/add', name: 'add')]
-    public function add(Request $request, OutingRepository $outingRepository): Response
+    public function add(
+                        Request $request,
+                        OutingRepository $outingRepository,
+                        StatusRepository $statusRepository
+    ): Response
+
     {
+        $planner = $this->getUser();
         $outing = new Outing();
+        $outing->setPlanner($planner);
+        $outing->setPlannerCampus($planner->getCampus());
+
         $outingForm = $this->createForm(OutingType::class, $outing);
-        $plannerCampus = new Campus();
+
 
         $outingForm->handleRequest($request);
 
-        if($outingForm->isSubmitted() && $outingForm->isValid()){
+        if($outingForm->isSubmitted() && $outingForm->isValid()) {
 
-            $outingForm->add('plannerCampus', Entity::class, [
-                'class' => Campus::class,
-                'choice_label' => 'name',
-                'label' => 'Campus',
-                'attr' => 'disabled',
-                'value' => $plannerCampus->getCampus()
-                ]
-            );
+            if ($outingForm->get('saveAndPublish')->isClicked()) {
+
+                 $outing->setStatus($statusRepository->find(2));
+
+                 $outingRepository->save($outing, true);
+
+                //ajout flash parce qu'on est des BG qui font ça bien
+                $this->addFlash("success", "Votre sortie est en ligne !");
+
+            } else {
+
+                $outing->setStatus($statusRepository->find(1));
+
+                $outingRepository->save($outing, true);
+
+                $this->addFlash("success",
+                    "Sortie créée avec succès :-) n'oubliez pas de la publier ;-) ");
+
+            }
 
 
-            $outingRepository->save($outing, true);
-
-            //ajout flash parce qu'on est des BG qui font ça bien
-            $this->addFlash("success", "outing successfully added");
-
-            //redirection
             return $this->redirectToRoute("outing_show", ['id' => $outing->getOuting()->getId()]);
             //           dd($outing);
         }
@@ -54,6 +66,7 @@ class OutingController extends AbstractController
         return $this->render('outing/add.html.twig', [
             'outingForm' => $outingForm->createView()
         ]);
+
     }
 
 
@@ -84,5 +97,30 @@ class OutingController extends AbstractController
     public function show(int $id){
 
     }
+
+//    public function listPlacesRelatedToCity(Request $request)
+//    {
+//        $entityManager = $this->getDoctrine()->getManager();
+//        $placeRepository = $entityManager->getRepository("App:Place");
+//
+//        $place = $placeRepository->createQueryBuilder("p")
+//            ->where("p.city = cityId")
+//            ->setParameter("cityId", $request->query->get("cityId"))
+//            ->getQuery()
+//            ->getResult();
+//
+//        $responseArray = array();
+//
+//        foreach ($place as $place) {
+//            $responseArray[] = array(
+//                "id" => $place->getId(),
+//                "name" => $place->getName()
+//            );
+//        }
+//
+//        return new JsonResponse($responseArray);
+//    }
+
+
 }
 
