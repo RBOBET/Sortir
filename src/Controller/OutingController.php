@@ -73,7 +73,7 @@ class OutingController extends AbstractController
 
     #[Route('/list', name: 'list')]
     public function list(OutingRepository $outingRepository){
-         $outings = $outingRepository->findAll();
+         $outings = $outingRepository->findListWithoutFilter();
 
         return $this->render('outing/list.html.twig', [
             'outings' => $outings
