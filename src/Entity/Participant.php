@@ -58,7 +58,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     )]
 
     #[ORM\Column(length: 20)]
-    #[Assert\Regex('^0[1-79]\.?\d{2}\.?\d{2}\.?\d{2}\.?\d{2}$', message: 'Le numéro de téléphone n\'est pas au bon format')]
+    #[Assert\Regex('#^0[1-79]\.?\d{2}\.?\d{2}\.?\d{2}\.?\d{2}$#', message: 'Le numéro de téléphone n\'est pas au bon format')]
     private ?string $phone = null;
 
     #[ORM\Column]

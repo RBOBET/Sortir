@@ -48,10 +48,8 @@ class ParticipantType extends AbstractType
 
             ->add('phone',TextType::class,[
                 'label'=>'Téléphone',
-                'html5' => true,
-                'constraints'=>[
-                    new Regex('^0[1-79]\.?\d{2}\.?\d{2}\.?\d{2}\.?\d{2}$', message:'Le numéro de téléphone n\'est pas au bon format' )
-                //autorise un numéro aux formats 06.05.04.03.02 et 0605040302
+                'attr' => [
+                    'placeholder' => '01.23.45.67.89 ou 0123456789'
                 ]
             ])
 
