@@ -58,7 +58,7 @@ class OutingController extends AbstractController
 
 
     #[Route('/remove/{id}', name: 'remove')]
-    public function remove(int $id, OutingRepository $outingRepository){
+    public function remove(int $id, OutingRepository $outingRepository) : Response{
         $outing = $outingRepository->find($id);
 
         if($outing){
@@ -72,7 +72,7 @@ class OutingController extends AbstractController
     }
 
     #[Route('/list', name: 'list')]
-    public function list(OutingRepository $outingRepository){
+    public function list(OutingRepository $outingRepository) : Response {
          $outings = $outingRepository->findListWithoutFilter();
 
         return $this->render('outing/list.html.twig', [
