@@ -61,7 +61,7 @@ class OutingRepository extends ServiceEntityRepository
             //je ne récupère pas les sorties archivées
             ->andWhere('status.id != :statusArchived')
             ->setParameter('statusArchived', 7)
-            ->addGroupBy('outing.dateTimeStart');
+            ->addOrderBy('outing.dateTimeStart');
 
         $query = $qb->getQuery();
         return $query->getResult();
@@ -106,7 +106,8 @@ class OutingRepository extends ServiceEntityRepository
             ->leftJoin('outing.participants', 'out_part')
             ->addSelect('out_part')
             ->andWhere('status.id != :statusArchived')
-            ->setParameter('statusArchived', 7);
+            ->setParameter('statusArchived', 7)
+            ->addOrderBy('outing.dateTimeStart');
 
         if ($filter->getNameContains() != null){
             $qb
@@ -114,7 +115,7 @@ class OutingRepository extends ServiceEntityRepository
                 ->setParameter('nameContains', '%'.$filter->getNameContains().'%');
         }
 
-        /*if ($filter->getStartDate()){
+        if ($filter->getStartDate()){
             $qb
                 ->andWhere('outing.dateTimeStart >= :startDate')
                 ->setParameter('startDate', $filter->getStartDate());
@@ -123,20 +124,32 @@ class OutingRepository extends ServiceEntityRepository
         if ($filter->getEndDate()){
             $qb
                 ->andWhere('outing.dateTimeStart <= :endDate')
-                ->setParameter('endDate', $filter->getStartDate());
+                ->setParameter('endDate', $filter->getEndDate());
         }
 
         if (($filter->isPlanner())){
             $qb
-                ->andWhere('part = :user')
-                ->setParameter('user', $currentUser);
+                ->andWhere('part = :userP')
+                ->setParameter('userP', $currentUser);
+        }
+
+        if ($filter->isRegistered()){
+            $qb
+                ->andWhere(':userR MEMBER OF outing.participants')
+                ->setParameter('userR', $currentUser);
+        }
+
+        if ($filter->isNotRegistered()){
+            $qb
+                ->andWhere(':userNR NOT MEMBER OF outing.participants')
+                ->setParameter('userNR', $currentUser);
         }
 
         if ($filter->isOutingIsPast()){
             $qb
                 ->andWhere('status = :statusFinished')
                 ->setParameter('statusFinished', 5);
-        }*/
+        }
 
         $query = $qb->getQuery();
         return $query->getResult();
