@@ -59,7 +59,7 @@ class OutingController extends AbstractController
             }
 
 
-            return $this->redirectToRoute("outing_show", ['id' => $outing->getOuting()->getId()]);
+            return $this->redirectToRoute("outing_show", ['id' => $outing->getId()]);
             //           dd($outing);
         }
 
@@ -77,9 +77,9 @@ class OutingController extends AbstractController
 
         if ($outing) {
             $outingRepository->remove($outing);
-            $this->addFlash("warning", "The outing has been deleted, this action cannot be undown");
+            $this->addFlash("warning", "La sortie a été supprimée, cette action est irréversible");
         } else {
-            throw $this->createNotFoundException(("This outing cannot be deleted"));
+            throw $this->createNotFoundException(("Cette sortie ne peut pas être supprimée"));
         }
 
         return $this->redirectToRoute('outing_list');

@@ -108,8 +108,6 @@ class OutingType extends AbstractType
                 }
             ])
 
-//TODO fix da following shit
-
             ->add('place', EntityType::class, [
                 'class' => Place::class,
                 'choice_label' => 'name',
@@ -118,12 +116,18 @@ class OutingType extends AbstractType
                     $qb = $placeRepository->createQueryBuilder("p");
                     $qb->leftJoin ('p.city', 'c');
                     $qb->addSelect("c");
+//                    $qb->addOrderBy('p.name');
                     return $qb;
                 }
             ])
 
+
+//            ->add('newPlaceForm', SubmitType::class, [
+//                'label' => '+'])
+
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer pour plus tard'])
+
             ->add('saveAndPublish', SubmitType::class, [
                 'label' => 'Publier la sortie'])
 

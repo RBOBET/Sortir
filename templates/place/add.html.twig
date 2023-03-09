@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %} {{ parent() }} | nouveau lieu {% endblock %}
+
+{% block pageTitle %}
+    <h2>Ajouter un lieu</h2>
+{% endblock %}
+
+{% block body %}
+
+
+    {{ form_start(newPlaceForm) }}
+
+
+    {{ form_widget(newPlaceForm) }}
+    {# <div>
+    <button>Enregistrer</button>
+    <button>Publier la sortie</button>
+    #}
+
+    {{ form_end(newPlaceForm) }}
+{#   <a class="btn" href="{{ path('outing_add') }}">Ajouter</a>
+    <a class="btn" href="{{ path('outing_add') }}">Annuler</a>   #}
+    {#   </div>     #}
+
+{% endblock %}

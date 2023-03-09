@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 
-{% block title %} {{ parent() }} | nouvelle-sortie {% endblock %}
+{% block title %} {{ parent() }} | nouvelle sortie {% endblock %}
 
 {% block pageTitle %}
     <h2>Créer une sortie</h2>
@@ -20,6 +20,7 @@
  #}
 
     {{ form_end(outingForm) }}
+    <a class="btn" href="{{ path('place_add') }}">+</a>
     <a class="btn" href="{{ path('outing_list') }}">Annuler</a>
  {#   </div>     #}
 
