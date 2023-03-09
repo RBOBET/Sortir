@@ -57,7 +57,7 @@
                         {% endif %}
                     {% elseif not (app.user in outing.participants) %}
                         {% if outing.status.id == 2 %}
-                            <a href="">S'inscrire</a>
+                            <a href="{{ path('outing_register', {'id': outing.id}) }}">S'inscrire</a>
                         {% endif %}
                     {% endif %}
 
