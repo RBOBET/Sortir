@@ -4,19 +4,19 @@
 {% block body %}
     <h1>Afficher une sortie</h1>
 
-    <div>Nom de la sortie : {{ outing.title}}</div>
-    <div>Date et heure de la sortie : {{ outing.dateTimeStart| date('d/m/Y H:i') }}</div>
-    <div>Date limite d'inscription : {{ outing.registrationLimitDate| date('d/m/Y')}}</div>
-    <div>Nombre de places : {{ outing.nbParticipantsMax }}</div>
-    <div>Durée : {{ outing.duration|date ('H:i') }}</div>
+    <div>Nom de la sortie : {{outing.title}}</div>
+    <div>Date et heure de la sortie : {{outing.dateTimeStart| date('d/m/Y H:i') }}</div>
+    <div>Date limite d'inscription : {{outing.registrationLimitDate| date('d/m/Y')}}</div>
+    <div>Nombre de places : {{outing.nbParticipantsMax }}</div>
+    <div>Durée : {{outing.duration}} minutes </div>
     <div>Description et infos : {{ outing.overview }}</div>
-    <div>Campus :{{ outing.plannerCampus.name}} </div>
+    <div>Campus :{{outing.plannerCampus.name}} </div>
 
-    <div>Lieu : </div>
-    <div>Rue : </div>
-    <div>Code postal : </div>
-    <div>Latitude :</div>
-    <div>Longitude :</div>
+    <div>Lieu : {{outing.place.name }}</div>
+    <div>Rue : {{outing.place.street }}</div>
+    <div>Code postal : {{outing.place.city.postalCode}} </div>
+    <div>Latitude : {{outing.place.latitude }}</div>
+    <div>Longitude :{{outing.place.longitude }}</div>
 
 
 {% endblock %}
