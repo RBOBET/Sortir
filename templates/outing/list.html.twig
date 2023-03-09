@@ -15,6 +15,11 @@
         </tr>
         </thead>
         <tbody>
+        {{ form_start(filterForm) }}
+        {{ form_widget(filterForm) }}
+        <button>Rechercher</button>
+        {{ form_end(filterForm) }}
+
         {% for outing in outings %}
             <tr scope="row">
                 <td>{{ outing.title }}</td>

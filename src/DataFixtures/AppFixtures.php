@@ -196,6 +196,10 @@ private function addParticipant(int $number, CampusRepository $campusRepository)
         $status6->setLabel('canceled');
         $this->entityManager->persist($status6);
 
+        $status7 = new Status();
+        $status7->setLabel('archived');
+        $this->entityManager->persist($status7);
+
         $this->entityManager->flush();
     }
 }

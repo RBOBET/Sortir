@@ -4,6 +4,8 @@ namespace App\Controller;
 
 
 use App\Entity\Outing;
+use App\Form\Model\OutingFilterModel;
+use App\Form\Model\OutingFilterType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
@@ -11,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 #[Route('/outing', name: 'outing_')]
 class OutingController extends AbstractController
@@ -85,10 +88,29 @@ class OutingController extends AbstractController
     #[Route('/list', name: 'list')]
     public function list(OutingRepository $outingRepository): Response
     {
-        $outings = $outingRepository->findListWithoutFilter();
+        $outingFilter = new OutingFilterModel();
+        $outingFilter->setCampus($this->getUser()->getCampus());
+        $outingFilterForm = $this->createForm(OutingFilterType::class, $outingFilter);
+
+        if ($outingFilterForm->isSubmitted() && $outingFilterForm->isValid()){
+            $outings = $outingRepository->findOutingsWithFilter($outingFilter);
+        } else {
+            $outings = $outingRepository->findListWithoutFilter();
+        }
+        $i = 0;
+        foreach($outings as $out) {
+            if($out->getStatus()->getId() == 1 &&
+                $out->getPlanner()->getId() != $this->getUser()->getId()) {
+                unset($outings[$i]);
+            }
+            $i++;
+        }
+
+
 
         return $this->render('outing/list.html.twig', [
-            'outings' => $outings
+            'outings' => $outings,
+            'filterForm' => $outingFilterForm->createView()
         ]);
     }
 
