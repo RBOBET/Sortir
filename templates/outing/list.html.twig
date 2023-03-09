@@ -45,7 +45,8 @@
 
                     {% if app.user == outing.planner %}
                         {% if outing.status.id == 1 %}
-                            <a href="">Modifier</a> <a href="">Publier</a>
+                            <a href="{{ path('outing_update', {'id': outing.id}) }}">Modifier</a>
+                            <a href="">Publier</a>
                         {% endif %}
                         {% if outing.status.id == 2 or outing.status.id == 3 %}
                             <a href="">Annuler</a>

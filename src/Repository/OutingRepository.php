@@ -45,6 +45,7 @@ class OutingRepository extends ServiceEntityRepository
         }
     }
 
+
     public function findListWithoutFilter(){
         $qb = $this->createQueryBuilder('outing');
         $qb
