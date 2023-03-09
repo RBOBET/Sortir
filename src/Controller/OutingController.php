@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Campus;
+
 use App\Entity\Outing;
-use App\Entity\Participant;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\StatusRepository;
-use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +18,9 @@ class OutingController extends AbstractController
 
     #[Route('/add', name: 'add')]
     public function add(
-                        Request $request,
-                        OutingRepository $outingRepository,
-                        StatusRepository $statusRepository,
+        Request          $request,
+        OutingRepository $outingRepository,
+        StatusRepository $statusRepository,
     ): Response
 
     {
@@ -35,13 +33,13 @@ class OutingController extends AbstractController
 
         $outingForm->handleRequest($request);
 
-        if($outingForm->isSubmitted() && $outingForm->isValid()) {
+        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
 
             if ($outingForm->get('saveAndPublish')->isClicked()) {
 
-                 $outing->setStatus($statusRepository->find(2));
+                $outing->setStatus($statusRepository->find(2));
 
-                 $outingRepository->save($outing, true);
+                $outingRepository->save($outing, true);
 
                 //ajout flash parce qu'on est des BG qui font ça bien
                 $this->addFlash("success", "Votre sortie est en ligne !");
@@ -70,12 +68,13 @@ class OutingController extends AbstractController
 
 
     #[Route('/remove/{id}', name: 'remove')]
-    public function remove(int $id, OutingRepository $outingRepository) : Response{
+    public function remove(int $id, OutingRepository $outingRepository): Response
+    {
         $outing = $outingRepository->find($id);
 
-        if($outing){
+        if ($outing) {
             $outingRepository->remove($outing);
-            $this->addFlash("warning","The outing has been deleted, this action cannot be undown" );
+            $this->addFlash("warning", "The outing has been deleted, this action cannot be undown");
         } else {
             throw $this->createNotFoundException(("This outing cannot be deleted"));
         }
@@ -84,8 +83,9 @@ class OutingController extends AbstractController
     }
 
     #[Route('/list', name: 'list')]
-    public function list(OutingRepository $outingRepository) : Response {
-         $outings = $outingRepository->findListWithoutFilter();
+    public function list(OutingRepository $outingRepository): Response
+    {
+        $outings = $outingRepository->findListWithoutFilter();
 
         return $this->render('outing/list.html.twig', [
             'outings' => $outings
@@ -101,13 +101,13 @@ class OutingController extends AbstractController
             throw $this->createNotFoundException("Oops! il n'existe pas !");
         }
 
-            return $this->render('outing/show.html.twig', [
-                'outing' => $outing
-            ]);
-        }
-
-
+        return $this->render('outing/show.html.twig', [
+            'outing' => $outing
+        ]);
     }
+
+
+
 
 //    public function listPlacesRelatedToCity(Request $request)
 //    {
@@ -133,6 +133,6 @@ class OutingController extends AbstractController
 //    }
 
 
-
 }
+
 
