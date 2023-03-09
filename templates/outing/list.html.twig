@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {{ form_start(filterForm) }}
+    {{ form_widget(filterForm) }}
+    <button>Rechercher</button>
+    {{ form_end(filterForm) }}
+
     <table class="table table-striped scroll">
         <thead>
         <tr>
@@ -15,10 +20,7 @@
         </tr>
         </thead>
         <tbody>
-        {{ form_start(filterForm) }}
-        {{ form_widget(filterForm) }}
-        <button>Rechercher</button>
-        {{ form_end(filterForm) }}
+
 
         {% for outing in outings %}
             <tr scope="row">
@@ -52,8 +54,8 @@
 
 
                     {% if not outing.participants.empty and app.user in outing.participants %}
-                        {% if date(outing.dateTimeStart) < date() %}
-                            <a href="">Se désister</a>
+                        {% if date(outing.dateTimeStart) > date() %}
+                            <a href="{{ path('outing_desist', {'id':outing.id}) }}">Se désister</a>
                         {% endif %}
                     {% elseif not (app.user in outing.participants) %}
                         {% if outing.status.id == 2 %}

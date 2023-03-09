@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class OutingFilterType extends AbstractType
 {
@@ -30,7 +31,8 @@ class OutingFilterType extends AbstractType
                 }
             ])
             ->add('nameContains', TextType::class, [
-                'label' => 'Le nom de la sortie contient'
+                'label' => 'Le nom de la sortie contient',
+                'empty_data' => ""
             ])
             ->add('startDate', DateType::class, [
                 'html5' => true,

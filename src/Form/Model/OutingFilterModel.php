@@ -11,9 +11,10 @@ class OutingFilterModel
 
     private Campus $campus;
     private string $nameContains;
-    private Date $startDate;
+    private \DateTime $startDate;
+
     #[Assert\GreaterThanOrEqual(propertyPath: 'startDate', message: 'Cette date ne peut pas être postérieure à la date de début de recherche')]
-    private Date $endDate;
+    private \DateTime $endDate;
     private bool $isPlanner;
     private bool $isRegistered;
     private bool $isNotRegistered;
@@ -58,7 +59,7 @@ class OutingFilterModel
     /**
      * @return Date
      */
-    public function getStartDate(): Date
+    public function getStartDate(): \DateTime
     {
         return $this->startDate;
     }
@@ -67,7 +68,7 @@ class OutingFilterModel
      * @param Date $startDate
      * @return OutingFilterModel
      */
-    public function setStartDate(Date $startDate): OutingFilterModel
+    public function setStartDate(\DateTime $startDate): OutingFilterModel
     {
         $this->startDate = $startDate;
         return $this;
@@ -76,7 +77,7 @@ class OutingFilterModel
     /**
      * @return Date
      */
-    public function getEndDate(): Date
+    public function getEndDate(): \DateTime
     {
         return $this->endDate;
     }
@@ -85,7 +86,7 @@ class OutingFilterModel
      * @param Date $endDate
      * @return OutingFilterModel
      */
-    public function setEndDate(Date $endDate): OutingFilterModel
+    public function setEndDate(\DateTime $endDate): OutingFilterModel
     {
         $this->endDate = $endDate;
         return $this;

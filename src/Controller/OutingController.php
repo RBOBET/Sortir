@@ -4,15 +4,18 @@ namespace App\Controller;
 
 
 use App\Entity\Outing;
+use App\Entity\Participant;
 use App\Form\Model\OutingFilterModel;
 use App\Form\Model\OutingFilterType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
+use App\Repository\ParticipantRepository;
 use App\Repository\StatusRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 
 
 #[Route('/outing', name: 'outing_')]
@@ -86,13 +89,19 @@ class OutingController extends AbstractController
     }
 
     #[Route('/list', name: 'list')]
-    public function list(OutingRepository $outingRepository): Response
+    public function list(OutingRepository $outingRepository, Request $request): Response
     {
         $outingFilter = new OutingFilterModel();
         $outingFilter->setCampus($this->getUser()->getCampus());
+        $outingFilter->setStartDate(new \DateTime('-1 year'));
+        $outingFilter->setEndDate(new \DateTime());
+
         $outingFilterForm = $this->createForm(OutingFilterType::class, $outingFilter);
+        $outingFilterForm->handleRequest($request);
+        dump($outingFilter);
 
         if ($outingFilterForm->isSubmitted() && $outingFilterForm->isValid()){
+            dump($outingFilter);
             $outings = $outingRepository->findOutingsWithFilter($outingFilter);
         } else {
             $outings = $outingRepository->findListWithoutFilter();
@@ -129,13 +138,47 @@ class OutingController extends AbstractController
     }
 
     #[Route('/register/{id}',name: 'register')]
-    public function  register (int $id, OutingRepository $outingRepository): Response
+    public function  register (int $id, OutingRepository $outingRepository, ParticipantRepository $participantRepository): Response
     {
         $outing=$outingRepository->find($id);
-        $this->getUser();
 
-        return $this->render('outing/list.html.twig');
+        /**
+         * @var Participant $user
+         */
+
+        $user = $this->getUser();
+        $outing->addParticipant($user);
+        $user->addOuting($outing);
+
+        $participantRepository->save($user,true);
+        $outingRepository->save($outing,true);
+        $this->addFlash("success", "Vous êtes enregistré !");
+
+        return $this->redirectToRoute('outing_list');
     }
+
+
+    #[Route ('desist/{id}',name :'desist')]
+    public function desist (int $id, OutingRepository $outingRepository, ParticipantRepository $participantRepository): Response
+    {
+        $outing=$outingRepository->find($id);
+
+        /**
+         * @var Participant $user
+         */
+
+        $user = $this->getUser();
+        $outing->removeParticipant($user);
+        $user->removeOuting($outing);
+
+        $participantRepository->save($user,true);
+        $outingRepository->save($outing,true);
+        $this->addFlash("success", "Vous êtes désinscrit !");
+
+
+        return $this->redirectToRoute('outing_list');
+    }
+
 
 
 
