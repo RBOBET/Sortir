@@ -99,22 +99,22 @@ class OutingRepository extends ServiceEntityRepository
             ->addSelect('status')
             ->leftJoin('outing.plannerCampus', 'campus')
             ->addSelect('campus')
+            ->andWhere('outing.plannerCampus = :campus')
+            ->setParameter('campus', $filter->getCampus())
             ->leftJoin('outing.place', 'place')
             ->addSelect('place')
             ->leftJoin('outing.participants', 'out_part')
             ->addSelect('out_part')
             ->andWhere('status.id != :statusArchived')
-            ->setParameter('statusArchived', 7)
-            ->andWhere('campus = :campus')
-            ->setParameter('campus', $filter->getCampus());
+            ->setParameter('statusArchived', 7);
 
-        if ($filter->getNameContains()){
+        if ($filter->getNameContains() != null){
             $qb
-                ->andWhere($qb->expr()->like('outing.title', ':nameContains'))
+                ->andWhere('outing.title LIKE :nameContains')
                 ->setParameter('nameContains', '%'.$filter->getNameContains().'%');
         }
 
-        if ($filter->getStartDate()){
+        /*if ($filter->getStartDate()){
             $qb
                 ->andWhere('outing.dateTimeStart >= :startDate')
                 ->setParameter('startDate', $filter->getStartDate());
@@ -136,7 +136,7 @@ class OutingRepository extends ServiceEntityRepository
             $qb
                 ->andWhere('status = :statusFinished')
                 ->setParameter('statusFinished', 5);
-        }
+        }*/
 
         $query = $qb->getQuery();
         return $query->getResult();

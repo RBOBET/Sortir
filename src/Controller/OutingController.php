@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 
 
 #[Route('/outing', name: 'outing_')]
@@ -88,13 +89,19 @@ class OutingController extends AbstractController
     }
 
     #[Route('/list', name: 'list')]
-    public function list(OutingRepository $outingRepository): Response
+    public function list(OutingRepository $outingRepository, Request $request): Response
     {
         $outingFilter = new OutingFilterModel();
         $outingFilter->setCampus($this->getUser()->getCampus());
+        $outingFilter->setStartDate(new \DateTime('-1 year'));
+        $outingFilter->setEndDate(new \DateTime());
+
         $outingFilterForm = $this->createForm(OutingFilterType::class, $outingFilter);
+        $outingFilterForm->handleRequest($request);
+        dump($outingFilter);
 
         if ($outingFilterForm->isSubmitted() && $outingFilterForm->isValid()){
+            dump($outingFilter);
             $outings = $outingRepository->findOutingsWithFilter($outingFilter);
         } else {
             $outings = $outingRepository->findListWithoutFilter();

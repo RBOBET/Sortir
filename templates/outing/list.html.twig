@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {{ form_start(filterForm) }}
+    {{ form_widget(filterForm) }}
+    <button>Rechercher</button>
+    {{ form_end(filterForm) }}
+
     <table class="table table-striped scroll">
         <thead>
         <tr>
@@ -15,10 +20,7 @@
         </tr>
         </thead>
         <tbody>
-        {{ form_start(filterForm) }}
-        {{ form_widget(filterForm) }}
-        <button>Rechercher</button>
-        {{ form_end(filterForm) }}
+
 
         {% for outing in outings %}
             <tr scope="row">
