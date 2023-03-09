@@ -3,7 +3,14 @@
 
 {% block body %}
 
+
+    
     <div>
+
+        <img src="{{ asset('img/photoParticipant/'~ participant.photo) }}"
+        alt="{{ participant.pseudo }}"
+        >
+        
         {{ form_start(participantForm) }}
 
         {{ form_widget(participantForm) }}
@@ -15,6 +22,8 @@
 
        <a href="{{ path('outing_list') }}"><button type="button">Annuler</button></a>
     </div>
+
+
     </div>
 
 {% endblock %}

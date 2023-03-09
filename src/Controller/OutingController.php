@@ -142,7 +142,7 @@ class OutingController extends AbstractController
         $outingFilter = new OutingFilterModel();
         $outingFilter->setCampus($this->getUser()->getCampus());
         $outingFilter->setStartDate(new \DateTime('-1 year'));
-        $outingFilter->setEndDate(new \DateTime());
+        $outingFilter->setEndDate(new \DateTime('+ 1 year'));
 
         $outingFilterForm = $this->createForm(OutingFilterType::class, $outingFilter);
         $outingFilterForm->handleRequest($request);
