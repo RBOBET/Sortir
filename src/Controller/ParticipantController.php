@@ -21,8 +21,6 @@ class ParticipantController extends AbstractController
 
         $participantForm->handleRequest($request);
 
-
-
             if ($participantForm->isSubmitted()&& $participantForm->isValid()){
              if (!$participantForm->get('plainPassword')->isEmpty()){
                 $password =  $passwordHasher->hashPassword($participant, $participantForm->get('plainPassword')->getData());
@@ -35,8 +33,6 @@ class ParticipantController extends AbstractController
 
 
         }
-
-
 
         return $this->render('participant/update.html.twig', [
             'participantForm'=>$participantForm->createView()

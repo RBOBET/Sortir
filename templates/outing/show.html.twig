@@ -18,8 +18,24 @@
     <div>Latitude : {{outing.place.latitude }}</div>
     <div>Longitude :{{outing.place.longitude }}</div>
 
+    <div class="TableParticipants">
+    <h5>Liste des participants inscrits</h5>
+<table class="table table-striped scroll">
 
+    <thead>
+    <tr>
+        <th scope="col">Pseudo</th>
+        <th scope="col">Nom</th>
+    </tr>
+    </thead>
+</table>
+    <tbody>
+    {% for participant in outing.participants %}
+    <tr scope="row">
+        <td>{{ participant.pseudo }}</td>
+        <td>{{ participant.firstName }} {{ participant.lastName | upper }}</td>
+    </tr>
+    {% endfor %}
+    </div>
+    </tbody>
 {% endblock %}
-
-
-

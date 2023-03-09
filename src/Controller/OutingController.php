@@ -106,6 +106,14 @@ class OutingController extends AbstractController
         ]);
     }
 
+    #[Route('/register/{id}',name: 'register')]
+    public function  register (int $id, OutingRepository $outingRepository): Response
+    {
+        $outing=$outingRepository->find($id);
+        $this->getUser();
+
+        return $this->render('outing/list.html.twig');
+    }
 
 
 
