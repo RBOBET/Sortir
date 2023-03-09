@@ -52,8 +52,8 @@
 
 
                     {% if not outing.participants.empty and app.user in outing.participants %}
-                        {% if date(outing.dateTimeStart) < date() %}
-                            <a href="">Se désister</a>
+                        {% if date(outing.dateTimeStart) > date() %}
+                            <a href="{{ path('outing_desist', {'id':outing.id}) }}">Se désister</a>
                         {% endif %}
                     {% elseif not (app.user in outing.participants) %}
                         {% if outing.status.id == 2 %}

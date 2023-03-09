@@ -4,10 +4,12 @@ namespace App\Controller;
 
 
 use App\Entity\Outing;
+use App\Entity\Participant;
 use App\Form\Model\OutingFilterModel;
 use App\Form\Model\OutingFilterType;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
+use App\Repository\ParticipantRepository;
 use App\Repository\StatusRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -129,13 +131,47 @@ class OutingController extends AbstractController
     }
 
     #[Route('/register/{id}',name: 'register')]
-    public function  register (int $id, OutingRepository $outingRepository): Response
+    public function  register (int $id, OutingRepository $outingRepository, ParticipantRepository $participantRepository): Response
     {
         $outing=$outingRepository->find($id);
-        $this->getUser();
 
-        return $this->render('outing/list.html.twig');
+        /**
+         * @var Participant $user
+         */
+
+        $user = $this->getUser();
+        $outing->addParticipant($user);
+        $user->addOuting($outing);
+
+        $participantRepository->save($user,true);
+        $outingRepository->save($outing,true);
+        $this->addFlash("success", "Vous êtes enregistré !");
+
+        return $this->redirectToRoute('outing_list');
     }
+
+
+    #[Route ('desist/{id}',name :'desist')]
+    public function desist (int $id, OutingRepository $outingRepository, ParticipantRepository $participantRepository): Response
+    {
+        $outing=$outingRepository->find($id);
+
+        /**
+         * @var Participant $user
+         */
+
+        $user = $this->getUser();
+        $outing->removeParticipant($user);
+        $user->removeOuting($outing);
+
+        $participantRepository->save($user,true);
+        $outingRepository->save($outing,true);
+        $this->addFlash("success", "Vous êtes désinscrit !");
+
+
+        return $this->redirectToRoute('outing_list');
+    }
+
 
 
 
