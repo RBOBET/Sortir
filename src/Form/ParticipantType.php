@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -87,8 +88,16 @@ class ParticipantType extends AbstractType
 
 
             ->add('photo',FileType::class,[
+                'mapped'=> false,
                 'label'=>'Ma photo',
                 'required'=>false,
+                'constraints'=>[
+                    new Image([
+                        "maxSize"=>'5000K',
+                        "mimeTypesMessage"=> "Le format de l'image n'est pas correct",
+
+                    ])
+                ]
             ])
         ;
     }
