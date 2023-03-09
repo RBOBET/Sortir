@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h4>Organisateur</h4>
+
+    {% block title %}
+        <div> Pseudo : {{ participant.pseudo }}</div>
+    {% endblock %}
+
+
+
+    <div>Prénom : {{ participant.firstName }}</div>
+    <div>Nom : {{ participant.lastName }}</div>
+    <div>Téléphone : {{ participant.phone }}</div>
+    <div>Email : {{ participant.email }}</div>
+    <div>Campus : {{ participant.campus}} </div>
+
+{% endblock %}
+
+
+//ajouter photo avec if et pseudo aussi .

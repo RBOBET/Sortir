@@ -64,4 +64,12 @@ class ParticipantController extends AbstractController
             'participant'=>$participant
         ]);
     }
+        #[Route('/show', name: 'show')]
+    public function show (int $id, ParticipantRepository $participantRepository): Response
+        {
+            $participant=$participantRepository->find($id);
+
+            return $this->render('participant/show.html.twig',[
+                'participant'=>$participant]);
+        }
 }
