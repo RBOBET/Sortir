@@ -104,6 +104,7 @@ class OutingType extends AbstractType
                 }
             ])
 
+
             ->add('place', EntityType::class, [
                 'class' => Place::class,
                 'choice_label' => 'name',
