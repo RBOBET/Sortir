@@ -41,9 +41,15 @@
                 </td>
                 {# si l'utilisateur a un pseudo #}
                 {% if outing.planner.pseudo %}
-                    <td>{{ outing.planner.pseudo }}</td>
+                    <td>
+                        <a href="{{ path('participant_show', {'id': outing.planner.id}) }}">{{ outing.planner.pseudo }}</a>
+                    </td>
                 {% else %}
-                    <td>{{ outing.planner.firstName | capitalize }} {{ outing.planner.lastName | first | upper }}.</td>
+                    <td>
+                        <a href="{{ path('participant_show', {'id': outing.planner.id}) }}">
+                            {{ outing.planner.firstName | capitalize }} {{ outing.planner.lastName | first | upper }}.
+                        </a>
+                    </td>
                 {% endif %}
                 <td>
                     {# si la sortie n'est pas en création ni archivée #}
@@ -81,7 +87,9 @@
         {% endfor %}
         </tbody>
     </table>
-    <a href="{{ path('outing_add') }}"><button>Créer une sortie</button></a>
+    <a href="{{ path('outing_add') }}">
+        <button>Créer une sortie</button>
+    </a>
 {% endblock %}
 
 {% block title %}
