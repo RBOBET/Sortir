@@ -104,15 +104,15 @@ class OutingController extends AbstractController
 
         if ($outingForm->isSubmitted() && $outingForm->isValid()) {
 
-                $outingRepository->save($outing, true);
+            $outingRepository->save($outing, true);
 
-                $this->addFlash("success",
-                    "Sortie mise à jour avec succès");
+            $this->addFlash("success",
+                "Sortie mise à jour avec succès");
 
-            }
 
             return $this->redirectToRoute("outing_show", ['id' => $outing->getId()]);
-//           dd($outing);
+            }
+
 
 
         return $this->render('outing/update.html.twig', [
@@ -137,6 +137,22 @@ class OutingController extends AbstractController
 
     return $this->redirectToRoute('outing_list');
 }
+
+    #[Route('/cancel/{id}', name: 'cancel')]
+    public function cancel(int $id, OutingRepository $outingRepository): Response
+    {
+        $outing = $outingRepository->find($id);
+
+        if ($outing) {
+            $outing->setStatus();
+            $this->addFlash("warning", "Votre sortie a été annulée");
+        } else {
+            throw $this->createNotFoundException(("Cette sortie ne peut pas être annulée"));
+        }
+
+        return $this->redirectToRoute('outing_list');
+    }
+
 
 
     #[Route('/list', name: 'list')]
