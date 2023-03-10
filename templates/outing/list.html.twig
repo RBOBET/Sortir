@@ -28,8 +28,10 @@
                 <td>{{ outing.dateTimeStart | date('d/m/Y H:i') }}</td>
                 <td>{{ outing.registrationLimitDate | date('d/m/Y') }}</td>
                 <td>{{ outing.participants | length }}/{{ outing.nbParticipantsMax }}</td>
-                <td>{{ outing.status.label }}</td>
+                {# on appelle les codes status enregistrés dans services.yaml #}
+                <td>{{ statusCodes[outing.status.id -1] }}</td>
                 <td>
+                    {# si la liste des inscrits est vide ou si l'utilisateur n'est pas dedans #}
                     {% if outing.participants.empty or not (app.user in outing.participants) %}
                         NON
                     {% else %}
@@ -37,31 +39,40 @@
                     {% endif %}
 
                 </td>
-                <td>{{ outing.planner.firstName | capitalize }} {{ outing.planner.lastName | first | upper }}.</td>
+                {# si l'utilisateur a un pseudo #}
+                {% if outing.planner.pseudo %}
+                    <td>{{ outing.planner.pseudo }}</td>
+                {% else %}
+                    <td>{{ outing.planner.firstName | capitalize }} {{ outing.planner.lastName | first | upper }}.</td>
+                {% endif %}
                 <td>
-                    {% if outing.status.id != 1 and outing.status.id != 5 %}
+                    {# si la sortie n'est pas en création ni archivée #}
+                    {% if outing.status.id != statusCodes[0] %}
                         <a href="{{ path('outing_show', {'id': outing.id}) }}">Afficher</a>
                     {% endif %}
 
+                    {# si l'utilisateur est l'organisateur #}
                     {% if app.user == outing.planner %}
-                        {% if outing.status.id == 1 %}
+                        {# et si la sortie est en création #}
+                        {% if outing.status.id == statusCodes[0] %}
                             <a href="{{ path('outing_update', {'id': outing.id}) }}">Modifier</a>
                             <a href="">Publier</a>
                         {% endif %}
-                        {% if outing.status.id == 2 or outing.status.id == 3 %}
+                        {# et si la sortie est en création ou ouverte ou fermée #}
+                        {% if outing.status.id == statusCodes[0] or outing.status.id == statusCodes[1] or outing.status.id == statusCodes[2] %}
                             <a href="">Annuler</a>
                         {% endif %}
                     {% endif %}
 
-
+                    {# si la liste des participants n'est pas vide et l'utilisateur est inscrit #}
                     {% if not outing.participants.empty and app.user in outing.participants %}
+                        {# si la sortie n'est pas commencée #}
                         {% if date(outing.dateTimeStart) > date() %}
                             <a href="{{ path('outing_desist', {'id':outing.id}) }}">Se désister</a>
                         {% endif %}
-                    {% elseif not (app.user in outing.participants) %}
-                        {% if outing.status.id == 2 %}
-                            <a href="{{ path('outing_register', {'id': outing.id}) }}">S'inscrire</a>
-                        {% endif %}
+                        {# si l'utilisateur n'est pas inscrit et la sortie est ouverte #}
+                    {% elseif not (app.user in outing.participants) and outing.status.id == statusCodes[1] %}
+                        <a href="{{ path('outing_register', {'id': outing.id}) }}">S'inscrire</a>
                     {% endif %}
 
 
