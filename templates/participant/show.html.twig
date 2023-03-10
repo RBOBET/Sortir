@@ -1,22 +1,26 @@
 {% extends 'base.html.twig' %}
 
+{% block pageTitle %}
+    {% if participant.pseudo %}
+    <h2> {{ participant.pseudo }}</h2>
+    {% else  %}
+    <h2>{{ participant.firstName | capitalize }} {{ participant.lastName | first |upper }}.</h2>
+    {% endif %}
+{% endblock %}
+
 {% block body %}
 
-    <h4>Organisateur</h4>
-
-    {% block title %}
-        <div> Pseudo : {{ participant.pseudo }}</div>
-    {% endblock %}
-
-
+   {% if participant.photo %}
+    <<img src="{{ asset('img/photoParticipant/'~ participant.photo) }}"
+            alt="{{ participant.pseudo }}"
+        >
+    {% endif %}
 
     <div>Prénom : {{ participant.firstName }}</div>
     <div>Nom : {{ participant.lastName }}</div>
     <div>Téléphone : {{ participant.phone }}</div>
     <div>Email : {{ participant.email }}</div>
-    <div>Campus : {{ participant.campus}} </div>
+    <div>Campus : {{ participant.campus.name}} </div>
 
 {% endblock %}
 
-
-//ajouter photo avec if et pseudo aussi .
