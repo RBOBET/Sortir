@@ -5,6 +5,15 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     upload_photo: 'img/photoParticipant'
+    status_codes:
+        - 'en création'
+        - 'ouverte'
+        - 'fermée'
+        - 'en cours'
+        - 'terminée'
+        - 'annulée'
+        - 'archivée'
+
 services:
     # default configuration for services in *this* file
     _defaults:

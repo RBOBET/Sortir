@@ -18,6 +18,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -32,7 +34,7 @@ class AppFixtures extends Fixture
         private ParticipantRepository $participantRepository,
         private StatusRepository $statusRepository,
         private PlaceRepository $placeRepository,
-
+        private ParameterBagInterface $parameterBag
     )
     {
         $this->faker = Factory::create('fr_FR');
@@ -40,20 +42,20 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $this->addCampus($this->campusRepository);
-        $this->addStatus($this->statusRepository);
+        $this->addCampus();
+        $this->addStatus();
         $this->addCities(50);
-        $this->addPlaces(50, $this->cityRepository);
-        $this->addParticipant(50, $this->campusRepository);
-        $this->addOuting(50,$this->participantRepository, $this->statusRepository, $this->placeRepository );
+        $this->addPlaces(50);
+        $this->addParticipant(50);
+        $this->addOuting(50);
     }
 
-private function addParticipant(int $number, CampusRepository $campusRepository)
+private function addParticipant(int $number)
 {
     $admin = new Participant();
     $admin
         ->setEmail('admin@campus-eni.fr')
-        ->setCampus($campusRepository->find(1))
+        ->setCampus($this->campusRepository->find(1))
         ->setPhone($this->faker->phoneNumber)
         ->setFirstName('Toto')
         ->setLastName('Ladmin')
@@ -74,24 +76,19 @@ private function addParticipant(int $number, CampusRepository $campusRepository)
 
         $idCampus=$this->faker->numberBetween(1,7);
         $participant
-            ->setCampus($campusRepository->find($idCampus));
+            ->setCampus($this->campusRepository->find($idCampus));
         $this->entityManager->persist($participant);
     }
     $this->entityManager->flush();
 }
 
-    public function addOuting(
-        int $number,
-        ParticipantRepository $participantRepository,
-        StatusRepository $statusRepository,
-        PlaceRepository $placeRepository
-    )
+    public function addOuting(int $number)
     {
         for( $i=0 ;$i < $number; $i++){
 
             $outing = new Outing();
             $idPlanner = $this->faker->numberBetween(min: 1,max: 50);
-            $planner = $participantRepository->find($idPlanner);
+            $planner = $this->participantRepository->find($idPlanner);
             $status = $this->faker->numberBetween(min: 1, max: 6);
             $idPlace = $this->faker->numberBetween(min: 1, max: 50);
 
@@ -99,8 +96,8 @@ private function addParticipant(int $number, CampusRepository $campusRepository)
             $outing
                 ->setPlanner($planner)
                 ->setPlannerCampus($planner->getCampus())
-                ->setStatus($statusRepository->find($status))
-                ->setPlace($placeRepository->find($idPlace))
+                ->setStatus($this->statusRepository->find($status))
+                ->setPlace($this->placeRepository->find($idPlace))
                 ->setTitle($this->faker->word)
                 ->setDateTimeStart($this->faker->dateTimeBetween('now', '+1 year'))
                 ->setDuration($this->faker->numberBetween(min: 1, max: 2880))
@@ -125,7 +122,7 @@ private function addParticipant(int $number, CampusRepository $campusRepository)
         $this->entityManager->flush();
     }
 
-    public function addPlaces(int $number, CityRepository $cityRepository){
+    public function addPlaces(int $number){
         for ($i=0; $i<$number; $i++){
             $place = new Place();
             $place
@@ -133,13 +130,13 @@ private function addParticipant(int $number, CampusRepository $campusRepository)
                 ->setStreet($this->faker->streetName);
             $nb = $this->faker->numberBetween(1, 50);
             $place
-                ->setCity($cityRepository->find($nb));
+                ->setCity($this->cityRepository->find($nb));
             $this->entityManager->persist($place);
         }
         $this->entityManager->flush();
     }
 
-    public function addCampus(CampusRepository $campusRepository){
+    public function addCampus(){
         $campus1 = new Campus();
         $campus1->setName('Saint-Herblain');
         $this->entityManager->persist($campus1);
@@ -171,34 +168,14 @@ private function addParticipant(int $number, CampusRepository $campusRepository)
         $this->entityManager->flush();
     }
 
-    public function addStatus(StatusRepository $statusRepository){
-        $status1 = new Status();
-        $status1->setLabel('created');
-        $this->entityManager->persist($status1);
-
-        $status2 = new Status();
-        $status2->setLabel('opened');
-        $this->entityManager->persist($status2);
-
-        $status3 = new Status();
-        $status3->setLabel('closed');
-        $this->entityManager->persist($status3);
-
-        $status4 = new Status();
-        $status4->setLabel('ongoing');
-        $this->entityManager->persist($status4);
-
-        $status5 = new Status();
-        $status5->setLabel('finished');
-        $this->entityManager->persist($status5);
-
-        $status6 = new Status();
-        $status6->setLabel('canceled');
-        $this->entityManager->persist($status6);
-
-        $status7 = new Status();
-        $status7->setLabel('archived');
-        $this->entityManager->persist($status7);
+    public function addStatus(){
+        //je récupère le tableau de status dans services.yaml
+        $statusCodes = $this->parameterBag->get('status_codes');
+        foreach ($statusCodes as $status){
+            $st = new Status();
+            $st->setLabel($status);
+            $this->entityManager->persist($st);
+        }
 
         $this->entityManager->flush();
     }

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Outing;
 use App\Entity\Participant;
+use App\Entity\Status;
 use App\Form\Model\OutingFilterModel;
 use App\Form\Model\OutingFilterType;
 use App\Form\OutingType;
@@ -158,6 +159,8 @@ class OutingController extends AbstractController
     #[Route('/list', name: 'list')]
     public function list(OutingRepository $outingRepository, Request $request): Response
     {
+        $statusCodes = $this->getParameter('status_codes');
+
         $outingFilter = new OutingFilterModel();
         $outingFilter->setCampus($this->getUser()->getCampus());
         $outingFilter->setStartDate(new \DateTime('-1 year'));
@@ -185,6 +188,7 @@ class OutingController extends AbstractController
 
         return $this->render('outing/list.html.twig', [
             'outings' => $outings,
+            'statusCodes' => $statusCodes,
             'filterForm' => $outingFilterForm->createView()
         ]);
     }

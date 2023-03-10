@@ -7,9 +7,7 @@ use App\Entity\Participant;
 use App\Form\Model\OutingFilterModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Validator\Constraints\Date;
 use function Doctrine\ORM\QueryBuilder;
 
 /**
@@ -68,8 +66,7 @@ class OutingRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    public function findOutingsToArchived(){
-        $dateArchived = new \DateTime('- 1 month');
+    public function findAllOutings(){
         $qb = $this->createQueryBuilder('outing');
         $qb
             ->leftJoin('outing.planner', 'part')
@@ -81,14 +78,12 @@ class OutingRepository extends ServiceEntityRepository
             ->leftJoin('outing.place', 'place')
             ->addSelect('place')
             ->leftJoin('outing.participants', 'out_part')
-            ->addSelect('out_part')
-            ->andWhere('outing.dateTimeStart < :dateArchived')
-            ->setParameter('dateArchived', $dateArchived);
+            ->addSelect('out_part');
 
         $query = $qb->getQuery();
         return $query->getResult();
-
     }
+
 
     public function findOutingsWithFilter(OutingFilterModel $filter){
         $currentUser = $this->security->getUser();
