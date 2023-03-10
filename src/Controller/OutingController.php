@@ -140,12 +140,16 @@ class OutingController extends AbstractController
 }
 
     #[Route('/cancel/{id}', name: 'cancel')]
-    public function cancel(int $id, OutingRepository $outingRepository): Response
+    public function cancel(
+        int $id,
+        OutingRepository $outingRepository,
+        StatusRepository $statusRepository
+    ): Response
     {
         $outing = $outingRepository->find($id);
 
         if ($outing) {
-            $outing->setStatus(5);
+            $outing->setStatus($statusRepository->find(5));
             $this->addFlash("warning", "Votre sortie a été annulée");
         } else {
             throw $this->createNotFoundException(("Cette sortie ne peut pas être annulée"));
