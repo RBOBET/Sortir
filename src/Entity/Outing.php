@@ -38,9 +38,8 @@ class Outing
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\LowerThanOrEqual(
-        propertyPath: "dateTimeStart",
-        message: "Date limite d'inscription incohérente")]
+    #[Assert\LessThan(propertyPath: 'dateTimeStart', message: 'La date limite d\'inscription doit être avant la date de la sortie')]
+    #[Assert\GreaterThan('now', message: 'La date limite d\'inscription doit être après la date du jour')]
     private ?\DateTimeInterface $registrationLimitDate = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
@@ -56,7 +55,7 @@ class Outing
     #[Assert\NotBlank(message:'Veuillez saisir une description')]
     #[Assert\Length(
         min: 3,
-        max: 255,
+        max: 3000,
         minMessage: "Minimum {{limit}} caractères s'il vous plait",
         maxMessage: "Maximum {{limit}} caractères s'il vous plait"
     )]

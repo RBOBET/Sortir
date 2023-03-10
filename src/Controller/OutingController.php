@@ -12,6 +12,7 @@ use App\Form\OutingType;
 use App\Repository\OutingRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\StatusRepository;
+use App\Service\OutingsStatus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -162,8 +163,11 @@ class OutingController extends AbstractController
 
 
     #[Route('/list', name: 'list')]
-    public function list(OutingRepository $outingRepository, Request $request): Response
+    public function list(Request $request, OutingRepository $outingRepository, OutingsStatus $outingsStatus): Response
     {
+        //je mets à jour tous les statuts des sorties suivant la date du jour
+        $outingsStatus->updateStatus();
+        //je récupère un tableau de statuts
         $statusCodes = $this->getParameter('status_codes');
 
         $outingFilter = new OutingFilterModel();
