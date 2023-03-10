@@ -1,11 +1,22 @@
 body {
-    background: linear-gradient(#fff3cd, #dfc2c4);
-    background-attachment: fixed;
-    background-position: center center;
-    background-size: cover;
-    color: #000000;
-    font-family: 'Roboto', serif;
+    font-family: Montserrat, sans-serif;
+    background: linear-gradient(-45deg, #fae6b1, #ffa101, #83dee5, #31525b);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    height: 100vh;
 }
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 
 .flex_div{
     display: flex;
