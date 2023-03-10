@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Outing;
 use App\Entity\Participant;
+use App\Entity\Place;
 use App\Form\Model\OutingFilterModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -151,4 +152,11 @@ class OutingRepository extends ServiceEntityRepository
         return $query->getResult();
 
     }
+
+//    public function selectedPlace(Place $selectedPlace){
+//
+//
+//
+//        return $selectedPlace;
+//    }
 }

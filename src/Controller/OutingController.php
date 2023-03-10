@@ -149,7 +149,8 @@ class OutingController extends AbstractController
         $outing = $outingRepository->find($id);
 
         if ($outing) {
-            $outing->setStatus($statusRepository->find(5));
+            $outing->setStatus($statusRepository->find(6));
+            $outingRepository->save($outing, true);
             $this->addFlash("warning", "Votre sortie a été annulée");
         } else {
             throw $this->createNotFoundException(("Cette sortie ne peut pas être annulée"));
