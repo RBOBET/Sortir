@@ -64,7 +64,7 @@ class ParticipantController extends AbstractController
             'participant'=>$participant
         ]);
     }
-        #[Route('/show', name: 'show')]
+        #[Route('/show/{id}', name: 'show')]
     public function show (int $id, ParticipantRepository $participantRepository): Response
         {
             $participant=$participantRepository->find($id);
