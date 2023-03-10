@@ -4,38 +4,40 @@
 {% block body %}
     <h1>Détails de la sortie</h1>
 
-    <div>Nom de la sortie : {{outing.title}}</div>
-    <div>Date et heure de la sortie : {{outing.dateTimeStart| date('d/m/Y H:i') }}</div>
-    <div>Date limite d'inscription : {{outing.registrationLimitDate| date('d/m/Y')}}</div>
-    <div>Nombre de places : {{outing.nbParticipantsMax }}</div>
-    <div>Durée : {{outing.duration}} minutes </div>
+    <div>Nom de la sortie : {{ outing.title }}</div>
+    <div>Date et heure de la sortie : {{ outing.dateTimeStart| date('d/m/Y H:i') }}</div>
+    <div>Date limite d'inscription : {{ outing.registrationLimitDate| date('d/m/Y') }}</div>
+    <div>Nombre de places : {{ outing.nbParticipantsMax }}</div>
+    <div>Durée : {{ outing.duration }} minutes</div>
     <div>Description et infos : {{ outing.overview }}</div>
-    <div>Campus :{{outing.plannerCampus.name}} </div>
+    <div>Campus :{{ outing.plannerCampus.name }} </div>
 
-    <div>Lieu : {{outing.place.name }}</div>
-    <div>Rue : {{outing.place.street }}</div>
-    <div>Code postal : {{outing.place.city.postalCode}} </div>
-    <div>Latitude : {{outing.place.latitude }}</div>
-    <div>Longitude :{{outing.place.longitude }}</div>
+    <div>Lieu : {{ outing.place.name }}</div>
+    <div>Rue : {{ outing.place.street }}</div>
+    <div>Code postal : {{ outing.place.city.postalCode }} </div>
+    <div>Latitude : {{ outing.place.latitude }}</div>
+    <div>Longitude :{{ outing.place.longitude }}</div>
 
     <div class="TableParticipants">
-    <h5>Liste des participants inscrits</h5>
-<table class="table table-striped scroll">
+        <h5>Liste des participants inscrits</h5>
+        <table class="table table-striped scroll">
 
-    <thead>
-    <tr>
-        <th scope="col">Pseudo</th>
-        <th scope="col">Nom</th>
-    </tr>
-    </thead>
-</table>
-    <tbody>
-    {% for participant in outing.participants %}
-    <tr scope="row">
-        <td>{{ participant.pseudo }}</td>
-        <td>{{ participant.firstName }} {{ participant.lastName | upper }}</td>
-    </tr>
-    {% endfor %}
+            <thead>
+            <tr>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Nom</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for participant in outing.participants %}
+                <tr scope="row">
+                    <td>{{ participant.pseudo }}</td>
+                    <td>{{ participant.firstName }} {{ participant.lastName | upper }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
     </div>
-    </tbody>
 {% endblock %}
