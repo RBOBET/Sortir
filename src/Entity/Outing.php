@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: OutingRepository::class)]
@@ -18,21 +19,47 @@ class Outing
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:'Veuillez saisir un nom pour votre sortie')]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: "Minimum {{limit}} caractères s'il vous plait",
+        maxMessage: "Maximum {{limit}} caractères s'il vous plait"
+    )]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank(message:'Veuillez saisir une date')]
+    #[Assert\GreaterThanOrEqual('now', message: "Date incohérente")]
     private ?\DateTimeInterface $dateTimeStart = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message:'Veuillez saisir une durée')]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\GreaterThanOrEqual(
+        propertyPath: "dateTimeStart",
+        message: "Date limite d'inscription incohérente")]
     private ?\DateTimeInterface $registrationLimitDate = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotBlank(message:'Veuillez saisir un nombre de participants')]
+    #[Assert\Range(
+        notInRangeMessage: 'Il doit y avoir entre {{ min }} et {{ max }} participant(s)',
+        min: 1,
+        max: 32767,
+    )]
     private ?int $nbParticipantsMax = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message:'Veuillez saisir une description')]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: "Minimum {{limit}} caractères s'il vous plait",
+        maxMessage: "Maximum {{limit}} caractères s'il vous plait"
+    )]
     private ?string $overview = null;
 
     #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'outings')]

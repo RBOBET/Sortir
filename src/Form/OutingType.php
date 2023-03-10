@@ -125,12 +125,6 @@ class OutingType extends AbstractType
 //            ->add('newPlaceForm', SubmitType::class, [
 //                'label' => '+'])
 
-            ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer pour plus tard'])
-
-            ->add('saveAndPublish', SubmitType::class, [
-                'label' => 'Publier la sortie'])
-
 
 //
         ;

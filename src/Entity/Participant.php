@@ -21,7 +21,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(unique: true)]
-    #[Assert\NotBlank(message: "Entrer une adresse Mail, s'il vous plait!")]
+    #[Assert\NotBlank(message: "Entrez une adresse Mail, s'il vous plait!")]
     #[Assert\Email(message: "L'adresse mail n'est pas conforme, Merci!")]
     private ?string $email = null;
 
@@ -34,7 +34,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?string $password = null;
-    #[Assert\NotBlank(message: "Entrer un mot de passe, s'il vous plait!")]
+    #[Assert\NotBlank(message: "Entrez un mot de passe, s'il vous plait!")]
     #[Assert\Length(min: 2,
         max: 255,
         minMessage: "Minimum {{ limit }} caractères svp !",

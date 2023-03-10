@@ -12,6 +12,7 @@ use App\Repository\OutingRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\StatusRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,6 +37,15 @@ class OutingController extends AbstractController
             $outing->setPlannerCampus($planner->getCampus());
 
             $outingForm = $this->createForm(OutingType::class, $outing);
+
+            $outingForm
+                ->add('save', SubmitType::class, [
+                    'label' => 'Enregistrer pour plus tard'])
+
+                ->add('saveAndPublish', SubmitType::class, [
+                    'label' => 'Publier la sortie'])
+            ;
+
 
             $outingForm->handleRequest($request);
 
@@ -84,33 +94,26 @@ class OutingController extends AbstractController
         $outing = $outingRepository->find($id);
         $outingForm = $this->createForm(OutingType::class, $outing);
 
+        $outingForm
+            ->add('save', SubmitType::class, [
+            'label' => 'Modifier'])
+            ;
+
+
         $outingForm->handleRequest($request);
 
         if ($outingForm->isSubmitted() && $outingForm->isValid()) {
 
-            if ($outingForm->get('saveAndPublish')->isClicked()) {
-
-                $outing->setStatus($statusRepository->find(2));
-
-                $outingRepository->save($outing, true);
-
-                $this->addFlash("success", "Votre sortie a été mise à jour et est en ligne !");
-
-            } else {
-
-                $outing->setStatus($statusRepository->find(1));
-
                 $outingRepository->save($outing, true);
 
                 $this->addFlash("success",
-                    "Sortie mise à jour avec succès :-) n'oubliez pas de la publier ;-) ");
+                    "Sortie mise à jour avec succès");
 
             }
 
-
             return $this->redirectToRoute("outing_show", ['id' => $outing->getId()]);
 //           dd($outing);
-        }
+
 
         return $this->render('outing/update.html.twig', [
             'outingForm' => $outingForm->createView(),
