@@ -58,16 +58,12 @@ class OutingType extends AbstractType
 
             ->add('nbParticipantsMax',IntegerType::class, [
                 'label' => 'Nombre de places',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir un nombre maximum de participants pour votre sortie',
-                    ]),
-                    new Length([
-                        'max' => 32767,
-                        'maxMessage' => 'ça commence à faire beaucoup de monde là frérot',
-                    ])
+                'attr' => [
+                    'min' => 1,
+                    'max' => 32676,
+                    ]
                 ]
-            ])
+            )
 
             ->add('duration', IntegerType::class, [
                 'label' => 'Durée : ',
