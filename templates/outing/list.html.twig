@@ -60,7 +60,7 @@
                         {% endif %}
                         {# et si la sortie est en création ou ouverte ou fermée #}
                         {% if outing.status.id == statusCodes[0] or outing.status.id == statusCodes[1] or outing.status.id == statusCodes[2] %}
-                            <a href="">Annuler</a>
+                            <a href="{{ path('outing_cancel', {'id': outing.id}) }}">Annuler</a>
                         {% endif %}
                     {% endif %}
 

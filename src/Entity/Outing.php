@@ -38,7 +38,7 @@ class Outing
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\GreaterThanOrEqual(
+    #[Assert\LowerThanOrEqual(
         propertyPath: "dateTimeStart",
         message: "Date limite d'inscription incohérente")]
     private ?\DateTimeInterface $registrationLimitDate = null;
