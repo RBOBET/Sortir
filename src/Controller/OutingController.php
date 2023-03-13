@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Controller;
 
@@ -104,7 +104,7 @@ class OutingController extends AbstractController
 
         $outingForm->handleRequest($request);
 
-        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+        if ($outingForm->isSubmitted() && $outingForm->isValid() && $this->getUser()->getId() === $outing->getPlanner()->getId()) {
 
             $outingRepository->save($outing, true);
 
@@ -130,7 +130,7 @@ class OutingController extends AbstractController
 {
     $outing = $outingRepository->find($id);
 
-    if ($outing) {
+    if ($outing && $this->getUser()->getId() === $outing->getPlanner()->getId()) {
         $outingRepository->remove($outing);
         $this->addFlash("warning", "La sortie a été supprimée, cette action est irréversible");
     } else {
@@ -149,9 +149,10 @@ class OutingController extends AbstractController
     {
         $outing = $outingRepository->find($id);
 
-        if ($outing) {
+
+        if ($outing && $this->getUser()->getId() === $outing->getPlanner()->getId()) {
             $outing->setStatus($statusRepository->find(6));
-            $outingRepository->save($outing, true);
+
             $this->addFlash("warning", "Votre sortie a été annulée");
         } else {
             throw $this->createNotFoundException(("Cette sortie ne peut pas être annulée"));

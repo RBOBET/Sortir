@@ -41,14 +41,17 @@ class ParticipantController extends AbstractController
                  * @var UploadedFile $file
                  */
                 $file=$participantForm->get('photo')->getData();
-                $newFileName = $uploader->upload(
-                    $file,
-                    $this->getParameter('upload_photo'),
-                    $participant->getLastName()
+                if ($file){
+                    $newFileName = $uploader->upload(
+                        $file,
+                        $this->getParameter('upload_photo'),
+                        $participant->getLastName()
+                    );
+                    $participant->setPhoto($newFileName);
+                }
 
-                );
 
-                $participant->setPhoto($newFileName);
+
 
 
              $participantRepository->save($participant,true);
