@@ -24,11 +24,6 @@ class OutingFilterType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Campus',
 
-                'query_builder' => function (CampusRepository $campusRepository) {
-                    $qb = $campusRepository->createQueryBuilder("c");
-                    $qb->addOrderBy("c.name");
-                    return $qb;
-                }
             ])
             ->add('nameContains', TextType::class, [
                 'label' => 'Le nom de la sortie contient',

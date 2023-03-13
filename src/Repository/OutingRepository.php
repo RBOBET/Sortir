@@ -96,8 +96,6 @@ class OutingRepository extends ServiceEntityRepository
             ->addSelect('status')
             ->leftJoin('outing.plannerCampus', 'campus')
             ->addSelect('campus')
-            ->andWhere('outing.plannerCampus = :campus')
-            ->setParameter('campus', $filter->getCampus())
             ->leftJoin('outing.place', 'place')
             ->addSelect('place')
             ->leftJoin('outing.participants', 'out_part')
@@ -106,6 +104,11 @@ class OutingRepository extends ServiceEntityRepository
             ->setParameter('statusArchived', 7)
             ->addOrderBy('outing.dateTimeStart');
 
+        if ($filter->getCampus()->getId() != 1){
+            $qb
+                ->andWhere('outing.plannerCampus = :campus')
+                ->setParameter('campus', $filter->getCampus());
+        }
         if ($filter->getNameContains() != null){
             $qb
                 ->andWhere('outing.title LIKE :nameContains')

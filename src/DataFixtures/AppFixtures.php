@@ -175,32 +175,36 @@ class AppFixtures extends Fixture
         function addCampus()
         {
             $campus1 = new Campus();
-            $campus1->setName('Saint-Herblain');
+            $campus1->setName('Tous les campus');
             $this->entityManager->persist($campus1);
 
             $campus2 = new Campus();
-            $campus2->setName('Chartres-De-Bretagne');
+            $campus2->setName('Saint-Herblain');
             $this->entityManager->persist($campus2);
 
             $campus3 = new Campus();
-            $campus3->setName('Quimper');
+            $campus3->setName('Chartres-De-Bretagne');
             $this->entityManager->persist($campus3);
 
             $campus4 = new Campus();
-            $campus4->setName('Niort');
+            $campus4->setName('Quimper');
             $this->entityManager->persist($campus4);
 
             $campus5 = new Campus();
-            $campus5->setName('Saint-Nazaire');
+            $campus5->setName('Niort');
             $this->entityManager->persist($campus5);
 
             $campus6 = new Campus();
-            $campus6->setName('La-Roche-Sur-Yon');
+            $campus6->setName('Saint-Nazaire');
             $this->entityManager->persist($campus6);
 
             $campus7 = new Campus();
-            $campus7->setName('Angers');
+            $campus7->setName('La-Roche-Sur-Yon');
             $this->entityManager->persist($campus7);
+
+            $campus8 = new Campus();
+            $campus8->setName('Angers');
+            $this->entityManager->persist($campus8);
 
             $this->entityManager->flush();
         }
