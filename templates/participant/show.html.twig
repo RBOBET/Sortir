@@ -9,18 +9,21 @@
 {% endblock %}
 
 {% block body %}
-
+<div class="ensembleShow">
+<div class="imgProfil">
    {% if participant.photo %}
-    <<img src="{{ asset('img/photoParticipant/'~ participant.photo) }}"
+    <img src="{{ asset('img/photoParticipant/'~ participant.photo) }}"
             alt="{{ participant.pseudo }}"
         >
     {% endif %}
-
+</div>
+    <div class="profilShow">
     <div>Prénom : {{ participant.firstName }}</div>
     <div>Nom : {{ participant.lastName }}</div>
     <div>Téléphone : {{ participant.phone }}</div>
     <div>Email : {{ participant.email }}</div>
     <div>Campus : {{ participant.campus.name}} </div>
-
+    </div>
+</div>
 {% endblock %}
 

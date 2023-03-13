@@ -75,7 +75,7 @@ class ParticipantType extends AbstractType
 
             ])
 
-            ->add('campus',EntityType::class, [
+            ->add('campus',EntityType::class,[
                 'class'=>Campus::class,
                 'choice_label'=> 'name',
                 'label'=>'Campus',

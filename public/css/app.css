@@ -31,7 +31,7 @@ body {
 .container {
     max-width: 1200px;
     margin: auto;
-    padding: 5px;
+    padding: 20px;
 }
 
 a {
@@ -40,10 +40,65 @@ a {
 }
 
 .link_button{
+
     border: 2px solid blueviolet;
     margin: 5px;
     padding: 5px;
     border-radius: 30% 5%;
+}
+.checkbox{
+    border: 2px;
+    margin: 5px;
+    padding: 5px;
+}
+.remember {
+    display: block;
+    padding-left: 20px;
+    text-indent: -25px;
+
+}
+._remember_me {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+}
+
+.DS{
+    text-align: center;
+}
+
+.tab{
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    margin-left: 17em;
+    margin-top: 3em;
+}
+
+.partie1 {
+    flex-direction: row;
+    line-height:2;
+    display: grid;
+    gap: 10px 2em;
+    align-content: center;
+
+}
+
+.partie2{
+    flex-direction: row;
+    line-height:2;
+    display: grid;
+    gap: 10px 2em;
+
+}
+
+.tableParticipants{
+    width: 20em;
+    margin-right: 10em;
 }
 
 a:hover {
@@ -51,9 +106,63 @@ a:hover {
 }
 
 img {
-    max-width: 400px;
-    min-width: 100px;
+    max-width: 10em;
+    min-width: 5em;
 }
+.imgProfil{
+    margin-right: 150em;
+    vertical-align:top;
+    max-width: 100em;
+    min-width: 200em;
+}
+
+.profilShow{
+    float:right;
+}
+
+.ensembleShow{
+    align-content: center;
+    display: grid;
+    width: 50em;
+    grid-template-columns: 300px 300px 300px;
+    line-height:2;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.ensembleModifP{
+    align-content: center;
+    display: grid;
+    width: 50em;
+    grid-template-columns: 300px 300px 300px;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.textModifP{
+    float:right;
+    width: 80em;
+}
+
+.imgModifP{
+    margin-right: 150em;
+    vertical-align:top;
+    max-width: 100em;
+    min-width: 200em;
+}
+
+
+
+.ensembleAffiche{
+    display: grid;
+    width: 50em;
+    grid-template-columns: 300px 300px 300px;
+    align-items: start;
+    justify-content: space-between;
+}
+
+
+
 
 h1, h2, h3, h4 {
     margin-top: 0;
@@ -102,7 +211,7 @@ nav li {
 
 }
 
-.TableParticipants{
+.tableParticipants{
     margin-top: 5em;
 }
 

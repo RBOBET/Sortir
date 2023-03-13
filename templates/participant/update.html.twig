@@ -4,27 +4,33 @@
 {% block body %}
 
 
-    
-    <div>
 
-        <img src="{{ asset('img/photoParticipant/'~ participant.photo) }}"
-        alt="{{ participant.pseudo }}"
-        >
-        
-        {{ form_start(participantForm) }}
-
-        {{ form_widget(participantForm) }}
-    <div>
-        <button>Enregistrer</button>
+    <div class="ensembleModifP">
+        <div class="imgModifP">
+            <img src="{{ asset('img/photoParticipant/'~ participant.photo) }}"
+                 alt="{{ participant.pseudo }}"
+            >
+        </div>
+        <div class="textModifP">
+            {{ form_start(participantForm) }}
+            {{ form_widget(participantForm) }}
 
 
-        {{ form_end(participantForm) }}
 
-       <a href="{{ path('outing_list') }}"><button type="button">Annuler</button></a>
+        <div class="bouton">
+            <button>Enregistrer</button>
+
+
+            {{ form_end(participantForm) }}
+
+            <a href="{{ path('outing_list') }}">
+                <button type="button">Annuler</button>
+            </a>
+        </div>
+        </div>
     </div>
 
 
-    </div>
 
 {% endblock %}
 

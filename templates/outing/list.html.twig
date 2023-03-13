@@ -1,8 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+
+
     {{ form_start(filterForm) }}
+
+    <div class="">
     {{ form_widget(filterForm) }}
+    </div>
+
+
     <button>Rechercher</button>
     {{ form_end(filterForm) }}
 
@@ -21,7 +29,7 @@
         </thead>
         <tbody>
 
-
+        <div class="jsp">
         {% for outing in outings %}
             <tr scope="row">
                 <td>{{ outing.title }}</td>
@@ -30,6 +38,7 @@
                 <td>{{ outing.participants | length }}/{{ outing.nbParticipantsMax }}</td>
                 {# on appelle les codes status enregistrés dans services.yaml #}
                 <td>{{ statusCodes[outing.status.id -1] }}</td>
+
                 <td>
                     {# si la liste des inscrits est vide ou si l'utilisateur n'est pas dedans #}
                     {% if outing.participants.empty or not (app.user in outing.participants) %}
@@ -39,6 +48,7 @@
                     {% endif %}
 
                 </td>
+
                 {# si l'utilisateur a un pseudo #}
                 {% if outing.planner.pseudo %}
                     <td>

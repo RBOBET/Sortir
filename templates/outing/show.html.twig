@@ -2,24 +2,31 @@
 
 
 {% block body %}
-    <h1>Détails de la sortie</h1>
 
-    <div>Nom de la sortie : {{ outing.title }}</div>
-    <div>Date et heure de la sortie : {{ outing.dateTimeStart| date('d/m/Y H:i') }}</div>
-    <div>Date limite d'inscription : {{ outing.registrationLimitDate| date('d/m/Y') }}</div>
-    <div>Nombre de places : {{ outing.nbParticipantsMax }}</div>
-    <div>Durée : {{ outing.duration }} minutes</div>
-    <div>Description et infos : {{ outing.overview }}</div>
-    <div>Campus :{{ outing.plannerCampus.name }} </div>
+    <h1 class="DS">Détails de la sortie</h1>
 
-    <div>Lieu : {{ outing.place.name }}</div>
-    <div>Rue : {{ outing.place.street }}</div>
-    <div>Code postal : {{ outing.place.city.postalCode }} </div>
-    <div>Latitude : {{ outing.place.latitude }}</div>
-    <div>Longitude :{{ outing.place.longitude }}</div>
+    <div class="tab">
+        <div class="partie1">
+            <div>Nom de la sortie : {{ outing.title }}</div>
+            <div>Date et heure de la sortie : {{ outing.dateTimeStart| date('d/m/Y H:i') }}</div>
+            <div>Date limite d'inscription : {{ outing.registrationLimitDate| date('d/m/Y') }}</div>
+            <div>Nombre de places : {{ outing.nbParticipantsMax }}</div>
+            <div>Durée : {{ outing.duration }} minutes</div>
+            <div>Description et infos : {{ outing.overview }}</div>
+        </div>
 
-    <div class="TableParticipants">
-        <h5>Liste des participants inscrits</h5>
+        <div class="partie2">
+            <div>Campus :{{ outing.plannerCampus.name }} </div>
+            <div>Lieu : {{ outing.place.name }}</div>
+            <div>Rue : {{ outing.place.street }}</div>
+            <div>Code postal : {{ outing.place.city.postalCode }} </div>
+            <div>Latitude : {{ outing.place.latitude }}</div>
+            <div>Longitude :{{ outing.place.longitude }}</div>
+        </div>
+    </div>
+
+    <div class="tableParticipants">
+        <h5>Liste des participants inscrits :</h5>
         <table class="table table-striped scroll">
 
             <thead>
