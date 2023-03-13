@@ -15,9 +15,36 @@
 
     {{ form_widget(outingForm) }}
 
+    <script>
+        const citySelect = document.getElementById('outing_city');
+        const placeSelect = document.getElementById('outing_place');
+
+        placeSelect.setAttribute("disabled", "true");
+
+        citySelect.addEventListener('change', function () {
+
+            let city = citySelect.value;
+
+            placeSelect.innerText = '';
+
+                    //appel asynchrone
+                    fetch('{{ path('api_place_find_places', {'id' :' ~ city ~ '}) }}'
+                        , {method: 'GET', body: JSON.stringify(city)})
+                        .then(function (response) {
+                            return response.json()
+                        }).then(function (city) {
+                        console.log(city)
+              //          document.getElementById('nbLike').innerText =
+                    })
+
+        })
+
+    </script>
+
 
 
     {{ form_end(outingForm) }}
+
 
 {#<div>Lieu : {{ selectedPlace }} </div>#}
 {#<div>Rue : {{selectedPlace.street }}</div>#}
@@ -28,44 +55,7 @@
 <a class="btn" href="{{ path('place_add') }}">+</a>
 <a class="btn" href="{{ path('outing_list') }}">Annuler</a>
 
-{#    {% block javascripts %}#}
-{#        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>#}
-{#        <script>#}
-{#            $('#appbundle_city_place').change(function () {#}
-{#                var citySelector = $(this);#}
-
-{#                // Request the places from the selected city.#}
-{#                $.ajax({#}
-{#                    url: "{{ path('city_list_places') }}",#}
-{#                    type: "GET",#}
-{#                    dataType: "JSON",#}
-{#                    data: {#}
-{#                        cityId: citySelector.val()#}
-{#                    },#}
-{#                    success: function (places) {#}
-{#                        var placeSelect = $("#appbundle_city_place");#}
-
-{#                        // Remove current options#}
-{#                        placeSelect.html('');#}
-
-{#                        // Empty value ...#}
-{#                       placeSelect.append('<option value> Choisissez un lieu dans ' + citySelector.find("option:selected").text() + ' ...</option>');#}
 
 
-{#                        $.each(place, function (key, place) {#}
-{#                            placeSelect.append('<option value="' + place.id + '">' + place.name + '</option>');#}
-{#                        });#}
-{#                    },#}
-{#                    error: function (err) {#}
-{#                        alert("Une erreur est survenue lors du chargement des lieux");#}
-{#                    }#}
-{#                });#}
-{#            });#}
-{#        </script>#}
-    {% endblock %}
-
-
-{# #}{#   </div>     #}
-
-{#{% endblock %}#}
+{% endblock %}
 

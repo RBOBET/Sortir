@@ -24,12 +24,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Doctrine\ORM\Query\Expr\Join;
+use Symfony\Component\Form\FormEvents;
 
 class OutingType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
             ->add('title', TextType::class,[
                 'label' => 'Nom de la sortie: ',
@@ -97,6 +99,7 @@ class OutingType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Ville : ',
                 'mapped' => false,
+                'attr' => ['id' => 'outing_city'],
                 'query_builder' => function(CityRepository $cityRepository) {
                     $qb = $cityRepository->createQueryBuilder("c");
                     $qb->addOrderBy("c.name");
@@ -108,6 +111,7 @@ class OutingType extends AbstractType
                 'class' => Place::class,
                 'choice_label' => 'name',
                 'label' => 'Lieu',
+                'attr' => ['id' => 'outing_place'],
                 'query_builder' => function(PlaceRepository $placeRepository){
                     $qb = $placeRepository->createQueryBuilder("p");
                     $qb->leftJoin ('p.city', 'c');
@@ -125,6 +129,9 @@ class OutingType extends AbstractType
 //
         ;
     }
+
+
+
 
 
 

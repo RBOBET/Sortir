@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\City;
 use App\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -38,6 +40,30 @@ class PlaceRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function findPlacesByCity(City $city)
+    {
+
+        $qb = $this->createQueryBuilder('place');   //il sait qu'on requête sur la table de ce repo et fait automatiquement le select
+        $qb                                              //place n'est qu'un alias
+            ->leftJoin('place.city', 'city')   //entité.attribut sur lequel je veux joindre ma table
+            ->addSelect('city')                   //select sur la 2eme table (celle de city) pour finaliser la jointure
+            ->andWhere('city = :c')                     //on précise sur quelle city en particulier
+            ->setParameter('c', $city)              //en l'occurence celle passée en paramètre de la fonction
+            ->addOrderBy('place.name')              //triées par ordre alphabétique ça fait plaisir
+        ;
+
+        $query = $qb->getQuery();                       //on crée une requête à partir du query builder
+            return $query->getResult();                 //et on en retourne le résultat
+
+    }
+
+
+
+
+
+
+
 
 //    /**
 //     * @return Place[] Returns an array of Place objects
