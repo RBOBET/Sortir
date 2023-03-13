@@ -33,54 +33,54 @@ class OutingController extends AbstractController
         StatusRepository $statusRepository,
     ): Response
     {
-            $planner = $this->getUser();
-            $outing = new Outing();
-            $outing->setPlanner($planner);
-            $outing->setPlannerCampus($planner->getCampus());
+        $planner = $this->getUser();
+        $outing = new Outing();
+        $outing->setPlanner($planner);
+        $outing->setPlannerCampus($planner->getCampus());
 
-            $outingForm = $this->createForm(OutingType::class, $outing);
+        $outingForm = $this->createForm(OutingType::class, $outing);
 
-            $outingForm
-                ->add('save', SubmitType::class, [
-                    'label' => 'Enregistrer pour plus tard'])
+        $outingForm
+            ->add('save', SubmitType::class, [
+                'label' => 'Enregistrer pour plus tard'])
 
-                ->add('saveAndPublish', SubmitType::class, [
-                    'label' => 'Publier la sortie'])
-            ;
-
-
-            $outingForm->handleRequest($request);
-
-            if ($outingForm->isSubmitted() && $outingForm->isValid()) {
-
-                if ($outingForm->get('saveAndPublish')->isClicked()) {
-
-                    $outing->setStatus($statusRepository->find(2));
-
-                    $outingRepository->save($outing, true);
-
-                    //ajout flash parce qu'on est des BG qui font ça bien
-                    $this->addFlash("success", "Votre sortie est en ligne !");
-
-                } else {
-
-                    $outing->setStatus($statusRepository->find(1));
-
-                    $outingRepository->save($outing, true);
-
-                    $this->addFlash("success",
-                        "Sortie créée avec succès :-) n'oubliez pas de la publier ;-) ");
-
-                }
+            ->add('saveAndPublish', SubmitType::class, [
+                'label' => 'Publier la sortie'])
+        ;
 
 
-                return $this->redirectToRoute("outing_show", ['id' => $outing->getId()]);
-//           dd($outing);
+        $outingForm->handleRequest($request);
+
+        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+
+            if ($outingForm->get('saveAndPublish')->isClicked()) {
+
+                $outing->setStatus($statusRepository->find(2));
+
+                $outingRepository->save($outing, true);
+
+                //ajout flash parce qu'on est des BG qui font ça bien
+                $this->addFlash("success", "Votre sortie est en ligne !");
+
+            } else {
+
+                $outing->setStatus($statusRepository->find(1));
+
+                $outingRepository->save($outing, true);
+
+                $this->addFlash("success",
+                    "Sortie créée avec succès :-) n'oubliez pas de la publier ;-) ");
+
             }
 
-            return $this->render('outing/add.html.twig', [
-                'outingForm' => $outingForm->createView()
-            ]);
+
+            return $this->redirectToRoute("outing_show", ['id' => $outing->getId()]);
+//           dd($outing);
+        }
+
+        return $this->render('outing/add.html.twig', [
+            'outingForm' => $outingForm->createView()
+        ]);
 
     }
 
@@ -98,8 +98,8 @@ class OutingController extends AbstractController
 
         $outingForm
             ->add('save', SubmitType::class, [
-            'label' => 'Modifier'])
-            ;
+                'label' => 'Modifier'])
+        ;
 
 
         $outingForm->handleRequest($request);
@@ -113,7 +113,7 @@ class OutingController extends AbstractController
 
 
             return $this->redirectToRoute("outing_show", ['id' => $outing->getId()]);
-            }
+        }
 
 
 
@@ -125,20 +125,20 @@ class OutingController extends AbstractController
     }
 
 
-#[Route('/remove/{id}', name: 'remove')]
+    #[Route('/remove/{id}', name: 'remove')]
     public function remove(int $id, OutingRepository $outingRepository): Response
-{
-    $outing = $outingRepository->find($id);
+    {
+        $outing = $outingRepository->find($id);
 
-    if ($outing && $this->getUser()->getId() === $outing->getPlanner()->getId()) {
-        $outingRepository->remove($outing);
-        $this->addFlash("warning", "La sortie a été supprimée, cette action est irréversible");
-    } else {
-        throw $this->createNotFoundException(("Cette sortie ne peut pas être supprimée"));
+        if ($outing && $this->getUser()->getId() === $outing->getPlanner()->getId()) {
+            $outingRepository->remove($outing);
+            $this->addFlash("warning", "La sortie a été supprimée, cette action est irréversible");
+        } else {
+            throw $this->createNotFoundException(("Cette sortie ne peut pas être supprimée"));
+        }
+
+        return $this->redirectToRoute('outing_list');
     }
-
-    return $this->redirectToRoute('outing_list');
-}
 
     #[Route('/cancel/{id}', name: 'cancel')]
     public function cancel(
@@ -172,9 +172,6 @@ class OutingController extends AbstractController
         $statusCodes = $this->getParameter('status_codes');
 
         $outingFilter = new OutingFilterModel();
-        $outingFilter->setCampus($this->getUser()->getCampus());
-        $outingFilter->setStartDate(new \DateTime('-1 year'));
-        $outingFilter->setEndDate(new \DateTime('+ 1 year'));
 
         $outingFilterForm = $this->createForm(OutingFilterType::class, $outingFilter);
         $outingFilterForm->handleRequest($request);
@@ -205,59 +202,59 @@ class OutingController extends AbstractController
 
     #[Route('/show/{id}', name: 'show')]
     public function show(int $id, OutingRepository $outingRepository): Response
-{
-    $outing = $outingRepository->find($id);
+    {
+        $outing = $outingRepository->find($id);
 
-    if (!$outing) {
-        throw $this->createNotFoundException("Oops! il n'existe pas !");
+        if (!$outing) {
+            throw $this->createNotFoundException("Oops! il n'existe pas !");
+        }
+
+        return $this->render('outing/show.html.twig', [
+            'outing' => $outing
+        ]);
     }
-
-    return $this->render('outing/show.html.twig', [
-        'outing' => $outing
-    ]);
-}
 
     #[Route('/register/{id}', name: 'register')]
     public function register(int $id, OutingRepository $outingRepository, ParticipantRepository $participantRepository): Response
-{
-    $outing = $outingRepository->find($id);
+    {
+        $outing = $outingRepository->find($id);
 
-    /**
-     * @var Participant $user
-     */
+        /**
+         * @var Participant $user
+         */
 
-    $user = $this->getUser();
-    $outing->addParticipant($user);
-    $user->addOuting($outing);
+        $user = $this->getUser();
+        $outing->addParticipant($user);
+        $user->addOuting($outing);
 
-    $participantRepository->save($user, true);
-    $outingRepository->save($outing, true);
-    $this->addFlash("success", "Vous êtes enregistré !");
+        $participantRepository->save($user, true);
+        $outingRepository->save($outing, true);
+        $this->addFlash("success", "Vous êtes enregistré !");
 
-    return $this->redirectToRoute('outing_list');
-}
+        return $this->redirectToRoute('outing_list');
+    }
 
 
     #[Route('desist/{id}', name: 'desist')]
     public function desist(int $id, OutingRepository $outingRepository, ParticipantRepository $participantRepository): Response
-{
-    $outing = $outingRepository->find($id);
+    {
+        $outing = $outingRepository->find($id);
 
-    /**
-     * @var Participant $user
-     */
+        /**
+         * @var Participant $user
+         */
 
-    $user = $this->getUser();
-    $outing->removeParticipant($user);
-    $user->removeOuting($outing);
+        $user = $this->getUser();
+        $outing->removeParticipant($user);
+        $user->removeOuting($outing);
 
-    $participantRepository->save($user, true);
-    $outingRepository->save($outing, true);
-    $this->addFlash("success", "Vous êtes désinscrit !");
+        $participantRepository->save($user, true);
+        $outingRepository->save($outing, true);
+        $this->addFlash("success", "Vous êtes désinscrit !");
 
 
-    return $this->redirectToRoute('outing_list');
-}
+        return $this->redirectToRoute('outing_list');
+    }
 
 
 
