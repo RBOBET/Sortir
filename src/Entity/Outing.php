@@ -63,14 +63,14 @@ class Outing
     )]
     private ?string $overview = null;
 
-    #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'outings')]
+    #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'outings', cascade: ["remove", "persist"])]
     private Collection $participants;
 
-    #[ORM\ManyToOne(inversedBy: 'organizedOutings')]
+    #[ORM\ManyToOne(cascade: ["remove", "persist"], inversedBy: 'organizedOutings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $planner = null;
 
-    #[ORM\ManyToOne(inversedBy: 'outings')]
+    #[ORM\ManyToOne(cascade: ["remove", "persist"], inversedBy: 'outings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $plannerCampus = null;
 

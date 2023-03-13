@@ -13,6 +13,7 @@ use App\Repository\ParticipantRepository;
 use App\Repository\PlaceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -121,13 +122,11 @@ class OutingType extends AbstractType
                     return $qb;
                 }
             ])
+            ->add('registerPlanner', CheckboxType::class, [
+                'mapped' => false,
+                'label' => 'M\'inscrire à la sortie'
+            ])
 
-
-//            ->add('newPlaceForm', SubmitType::class, [
-//                'label' => '+'])
-
-
-//
         ;
     }
 

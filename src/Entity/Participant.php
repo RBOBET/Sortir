@@ -67,14 +67,14 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
-    #[ORM\ManyToMany(targetEntity: Outing::class, inversedBy: 'participants')]
+    #[ORM\ManyToMany(targetEntity: Outing::class, inversedBy: 'participants', cascade: ["remove", "persist"])]
     private Collection $outings;
 
     #[ORM\ManyToOne(inversedBy: 'participants')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
 
-    #[ORM\OneToMany(mappedBy: 'planner', targetEntity: Outing::class)]
+    #[ORM\OneToMany(mappedBy: 'planner', targetEntity: Outing::class, cascade: ["remove", "persist"])]
     private Collection $organizedOutings;
 
 

@@ -10,9 +10,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaceController extends AbstractController
 {
     #[Route('/{id}', name: 'find_places')]
-    public function findPlacesByCity(City $city, PlaceRepository $placeRepository){
-        $places = $placeRepository->findPlacesByCity($city);
-        return $this->json($places, 200, [], ['groups' => 'place_api']);
+    public function findPlacesByCity(int $id, PlaceRepository $placeRepository){
+
+        $places = $placeRepository->findPlacesByCity($id);
+        $placesArray = [];
+        foreach ($places as $place){
+            $placesArray[] = [
+                'id' => $place->getId(),
+                'nom' => $place->getName()
+            ];
+        }
+        return $this->json($placesArray, 200, [], ['groups' => 'place_api']);
     }
 
 }

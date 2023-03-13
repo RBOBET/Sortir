@@ -31,8 +31,12 @@ class OutingController extends AbstractController
         Request          $request,
         OutingRepository $outingRepository,
         StatusRepository $statusRepository,
+        ParticipantRepository $participantRepository
     ): Response
     {
+        /**
+         * @var Participant $planner
+         */
         $planner = $this->getUser();
         $outing = new Outing();
         $outing->setPlanner($planner);
@@ -51,11 +55,19 @@ class OutingController extends AbstractController
 
         $outingForm->handleRequest($request);
 
+
         if ($outingForm->isSubmitted() && $outingForm->isValid()) {
+
 
             if ($outingForm->get('saveAndPublish')->isClicked()) {
 
                 $outing->setStatus($statusRepository->find(2));
+
+                if ($outingForm->get('registerPlanner')->getData()){
+                $outing->addParticipant($planner);
+                $planner->addOuting($outing);
+                $participantRepository->save($planner, true);
+            }
 
                 $outingRepository->save($outing, true);
 
@@ -66,6 +78,12 @@ class OutingController extends AbstractController
 
                 $outing->setStatus($statusRepository->find(1));
 
+                if ($outingForm->get('registerPlanner')->getData()){
+                    $outing->addParticipant($planner);
+                    $planner->addOuting($outing);
+                    $participantRepository->save($planner, true);
+                }
+
                 $outingRepository->save($outing, true);
 
                 $this->addFlash("success",
@@ -75,7 +93,7 @@ class OutingController extends AbstractController
 
 
             return $this->redirectToRoute("outing_show", ['id' => $outing->getId()]);
-//           dd($outing);
+
         }
 
         return $this->render('outing/add.html.twig', [
@@ -96,6 +114,11 @@ class OutingController extends AbstractController
         $outing = $outingRepository->find($id);
         $outingForm = $this->createForm(OutingType::class, $outing);
 
+        if ($this->getUser()->getId() != $outing->getPlanner()->getId()){
+            $this->addFlash('warning', 'Vous n\'êtes pas l\'utilisateur qui a organisé cette sortie');
+            $this->redirectToRoute('outing_list');
+        }
+
         $outingForm
             ->add('save', SubmitType::class, [
                 'label' => 'Modifier'])
@@ -104,7 +127,7 @@ class OutingController extends AbstractController
 
         $outingForm->handleRequest($request);
 
-        if ($outingForm->isSubmitted() && $outingForm->isValid() && $this->getUser()->getId() === $outing->getPlanner()->getId()) {
+        if ($outingForm->isSubmitted() && $outingForm->isValid()) {
 
             $outingRepository->save($outing, true);
 
@@ -130,13 +153,13 @@ class OutingController extends AbstractController
     {
         $outing = $outingRepository->find($id);
 
-        if ($outing && $this->getUser()->getId() === $outing->getPlanner()->getId()) {
-            $outingRepository->remove($outing);
-            $this->addFlash("warning", "La sortie a été supprimée, cette action est irréversible");
-        } else {
-            throw $this->createNotFoundException(("Cette sortie ne peut pas être supprimée"));
-        }
+        if ($this->getUser()->getId() != $outing->getPlanner()->getId()){
+            $this->addFlash('warning', 'Vous n\'êtes pas l\'utilisateur qui a organisé cette sortie');
 
+        } else {
+            $outingRepository->remove($outing, true);
+            $this->addFlash("warning", "La sortie a été supprimée, cette action est irréversible");
+        }
         return $this->redirectToRoute('outing_list');
     }
 
@@ -149,13 +172,14 @@ class OutingController extends AbstractController
     {
         $outing = $outingRepository->find($id);
 
+        if ($this->getUser()->getId() != $outing->getPlanner()->getId()) {
 
-        if ($outing && $this->getUser()->getId() === $outing->getPlanner()->getId()) {
+            $this->addFlash('warning', 'Vous n\'êtes pas l\'utilisateur qui a organisé cette sortie');
+
+        } else {
             $outing->setStatus($statusRepository->find(6));
 
             $this->addFlash("warning", "Votre sortie a été annulée");
-        } else {
-            throw $this->createNotFoundException(("Cette sortie ne peut pas être annulée"));
         }
 
         return $this->redirectToRoute('outing_list');
@@ -215,7 +239,10 @@ class OutingController extends AbstractController
     }
 
     #[Route('/register/{id}', name: 'register')]
-    public function register(int $id, OutingRepository $outingRepository, ParticipantRepository $participantRepository): Response
+    public function register(int $id,
+                             OutingRepository $outingRepository,
+                             ParticipantRepository $participantRepository,
+                                StatusRepository $statusRepository): Response
     {
         $outing = $outingRepository->find($id);
 
@@ -224,11 +251,16 @@ class OutingController extends AbstractController
          */
 
         $user = $this->getUser();
+        //si le nb de partiicipants max est atteint
+        if ((count($outing->getParticipants()) + 1) == $outing->getNbParticipantsMax()){
+            $outing->setStatus($statusRepository->find(3));
+        }
         $outing->addParticipant($user);
         $user->addOuting($outing);
 
         $participantRepository->save($user, true);
         $outingRepository->save($outing, true);
+
         $this->addFlash("success", "Vous êtes enregistré !");
 
         return $this->redirectToRoute('outing_list');
